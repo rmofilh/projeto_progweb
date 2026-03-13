@@ -1,0 +1,114 @@
+# Design: Sistema de Apoio ao Bordado Manual (Fio & Luz)
+
+## Overview
+
+O projeto **Fio & Luz** é uma PWA full-stack orientada a simplificar o processo de decalque de moldes (riscos) para tecidos. A solução técnica baseia-se na emulação de uma mesa de luz física através de dispositivos móveis, utilizando APIs de baixo nível do navegador para gerenciar o estado do hardware (tela) e o isolamento de eventos de entrada no DOM. A arquitetura segue o padrão Clean Architecture com decomposição em camadas para isolar o domínio das complexidades de infraestrutura.
+
+## Goals
+
+*   **Implementar Mesa de Luz Digital:** Prover uma interface imersiva que garanta 100% de brilho e impeça o timeout da tela do dispositivo.
+*   **Garantir Escala Física Real:** Utilizar metadados do dispositivo para que o zoom do software reflita dimensões físicas precisas (milímetros/centímetros).
+*   **Isolamento de Entrada:** Neutralizar eventos de touch/scroll durante o uso da mesa de luz para evitar deslocamentos acidentais do molde.
+*   **Resiliência Offline:** Garantir disponibilidade de moldes favoritados via Cache API e IndexedDB.
+*   **End-to-end Type Safety:** Garantir integridade estrutural entre Python (Backend) e TypeScript (Frontend).
+
+## Non-Goals
+
+*   **Editor de Imagens:** Não haverá criação de riscos dentro da plataforma no MVP.
+*   **Suporte a Safari v < 14:** Não será garantido suporte nativo à Wake Lock API em versões legadas do iOS.
+*   **Processamento de Imagem em Tempo Real:** O processamento (extração de traços) será assíncrono ou pré-renderizado.
+
+## Architecture
+
+A arquitetura é dividida em um Backend (FastAPI) focado em persistência e validação, e um Frontend (Next.js) que atua como o motor de renderização imersivo e controlador de hardware (PWA).
+
+### Components
+
+*   **API Gateway (FastAPI):** Centraliza autenticação (Magic Links), orquestra o catálogo de riscos e gerencia o estado do "Baú Pessoal".
+*   **PWA Shell (Next.js/App Router):** Gerencia o ciclo de vida da aplicação no cliente, incluindo Service Workers para cache de assets e imagens.
+*   **Mesa de Luz Engine:** Módulo frontend específico que encapsula as APIs de hardware (Wake Lock, Fullscreen) e a lógica de calibração de escala.
+
+## Domain Model
+
+*   **`Risco`:** Entidade raiz. Contém o payload visual (SVG/PNG) e as invariantes de escala (`cm_reference`).
+*   **`Coleção`:** Agrupamento lógico de riscos com propósitos curatoriais.
+*   **`SessãoMesaDeLuz`:** Entidade de estado transiente que governa o ciclo de vida do decalque (start/end/calibration).
+*   **`BaúPessoal`:** Agregado de moldes favoritos vinculados à identidade da usuária.
+
+## Data Model
+
+*   **PostgreSQL (Relacional):**
+    *   `patterns`: id, title, image_path, scale_metadata, difficulty_level.
+    *   `collections`: id, title, cover_image.
+    *   `users`: id, email (Magic Link identifier).
+    *   `user_patterns`: link entre usuários e seus favoritos.
+*   **IndexedDB (Client-side):**
+    *   Cache de metadados de riscos favoritados para carregamento instantâneo offline.
+
+## System Flow
+
+1.  **Descoberta:** O sistema serve riscos via catálogo paginado.
+2.  **Preparação:** Ao selecionar um risco, o sistema calcula a escala necessária baseada no `devicePixelRatio`.
+3.  **Ativação:**
+    *   O frontend requisita `Screen Wake Lock`.
+    *   O sistema entra em `RequestFullscreen`.
+    *   A UI inverte para alto contraste (traço preto/fundo branco).
+    *   A camada de isolamento de eventos (Overlay) é ativada.
+4.  **Uso:** Usuária realiza o decalque físico sobre a tela.
+5.  **Finalização:** Toque longo detectado pelo overlay dispara a liberação do Wake Lock e restaura a UI.
+
+## API Design
+
+*   `GET /v1/patterns`: Listagem com filtros de coleção.
+*   `GET /v1/patterns/{id}`: Detalhamento e metadados de escala.
+*   `POST /v1/favorites/{id}`: Persistência de favorito (dispara download no Service Worker).
+*   `POST /v1/auth/magic-link`: Emite token por e-mail para acesso simples.
+
+## Frontend / Client Implementation
+
+Implementado em TypeScript/React utilizando:
+*   **Framer Motion:** Para transições suaves entre estados de descoberta e mesa de luz.
+*   **NoSleep.js:** Como fallback para manter a tela ativa em ambientes sem suporte à Wake Lock API.
+*   **TailwindCSS:** Para definições de layout responsivo com foco em touch targets de 56px.
+
+## Offline Strategy
+
+*   **Service Worker:** Intercepta requisições de rede para servir o shell da aplicação via `Stale-While-Revalidate`.
+*   **Cache Storage:** Armazena imagens de alta resolução dos moldes marcados no "Baú Pessoal".
+*   **Background Sync:** Registra ações de favoritar enquanto offline para sincronizar com o servidor ao retomar a conexão.
+
+## Technical Decisions
+
+### Decision: Screen Wake Lock API vs. Video Loop
+
+Reason:
+A Wake Lock API é a forma nativa e eficiente de impedir o repouso do sistema, permitindo melhor gerenciamento de energia e previsibilidade de comportamento.
+
+Alternatives considered:
+Criação de um elemento `<video>` em loop infinito oculto (técnica NoSleep.js).
+
+Trade-offs:
+Wake Lock tem suporte variável (Safari), exigindo o fallback para vídeo em loop como `progressive enhancement`.
+
+### Decision: Magic Links via E-mail vs. Password Auth
+
+Reason:
+Reduz a carga cognitiva e elimina a necessidade de gestão de senhas para o público 50+, aumentando a taxa de conversão do "Baú Pessoal".
+
+Alternatives considered:
+Auth tradicional (E-mail/Senha) ou OAuth2 (Google/Facebook).
+
+Trade-offs:
+Dependência do cliente de e-mail da usuária e latência na entrega do link.
+
+## Risks
+
+*   **Inconsistência de Escala:** Diferentes densidades de pixels podem gerar variações milimétricas. *Mitigação:* Implementar modo de calibração manual via referência física.
+*   **Aquecimento do Dispositivo:** Brilho em 100% por longos períodos. *Mitigação:* Monitorar tempo de sessão e oferecer avisos.
+
+## Rollout / Migration Plan
+
+*   **Fase 1:** MVP com persistência de favoritos apenas em `localStorage` (Offline-first sem Auth).
+*   **Fase 2:** Introdução do Backend e Magic Links para sincronização em nuvem.
+*   **Fase 3:** Migração automática do `localStorage` para a conta do usuário no primeiro login.
+

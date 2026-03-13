@@ -11,6 +11,7 @@ A fundação do projeto pauta-se nos princípios de controle estrito de estado, 
 Desenvolver e implantar uma Progressive Web App (PWA) de alta resiliência e acessibilidade. O sistema resolve dois problemas centrais:
 1. **Curadoria Visual:** Substituir a fragmentação e sobrecarga cognitiva de redes sociais genéricas por uma interface limpa, focada exclusivamente na descoberta de riscos catalogados.
 2. **Transferência de Moldes (The "Light Table"):** Utilizar APIs nativas dos navegadores modernos (como *Screen Wake Lock API* e isolamento de eventos Touch/Pointer no DOM) para converter tablets e smartphones em mesas de luz efetivas. Isso resolve a dor mecânica de transferir o desenho do papel/tela para o tecido, garantindo que o dispositivo não entre em repouso (apagando a tela) e não reaja erroneamente a toques da mão sobre a tela durante o decalque.
+3. **Resiliência Offline (PWA):** Garantir que a usuária possa utilizar a Mesa de Luz mesmo em locais sem conectividade (como ateliês ou zonas rurais), permitindo o acesso aos moldes favoritados sem interrupção.
 
 ## 3. Público-Alvo e Segmentação
 
@@ -43,6 +44,10 @@ A abstração das regras de negócio (Core Domain) isola a complexidade da "Mesa
     2. O frontend despacha injecões imperativas: oculta *todas* as barras de navegação, ativa o *Wake Lock* (travando o brilho da tela no máximo e impedindo suspensão) e desabilita APIs de scroll/pinch.
     3. Para sair, exige-se uma interação intencional de mitigação de erro (ex: toque longo no centro do desenho).
 *   **Baú Pessoal (Low-Friction Auth):** As usuárias podem favoritar Riscos. A autenticação descarta a gerência arcaica de senhas, operando nativamente via oAuth (Single Sign-On Google) ou *Magic Links* enviados por e-mail, reduzindo em 80% as quebras na jornada do usuário.
+    *   *Capacidade de Armazenamento:* O Baú Pessoal suporta até **100 moldes favoritados** por usuária. Os metadados e as imagens em baixa resolução (thumbnails) desses moldes são sincronizados automaticamente com o armazenamento local do dispositivo (*IndexedDB*) para garantir disponibilidade instantânea.
+*   **Modo Offline e Cache de Ativos:**
+    *   Utilização de *Service Workers* para cache de recursos estáticos (UI) e imagens dos riscos salvos no Baú Pessoal.
+    *   Os riscos marcados como favoritos são baixados em alta definição para o sistema de arquivos local do navegador (*Origin Private File System* ou *Cache Storage API*), permitindo a ativação da Mesa de Luz sem dependência de rede.
 
 ## 5. Tecnologias e Arquitetura
 
