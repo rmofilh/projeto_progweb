@@ -1,20 +1,124 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+project:
+  name: fio-e-luz
+  description: >
+    Progressive Web App (PWA) para apoio ao bordado manual, com catálogo de riscos
+    e funcionalidade de mesa de luz digital.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+context:
+
+  backend:
+    framework: fastapi
+    language: python
+    database: postgresql
+
+    requirements:
+      - MUST use FastAPI as the backend framework
+      - MUST use Pydantic v2 for strict data validation and typing
+      - MUST use SQLAlchemy 2.0 or SQLModel as ORM
+      - MUST use PostgreSQL as the primary database
+      - MUST validate all request and response schemas using Pydantic
+      - MUST generate OpenAPI schema automatically
+
+  frontend:
+    framework: nextjs
+    router: app-router
+    language: typescript
+    styling: tailwindcss
+    ui_library: shadcn-ui
+
+    requirements:
+      - MUST use Next.js with App Router
+      - MUST use TypeScript in ALL files
+      - MUST NOT use plain JavaScript files
+      - MUST use TailwindCSS for styling
+      - MUST use ONLY components from shadcn/ui ecosystem
+      - MUST follow accessibility best practices (WCAG)
+      - MUST provide large touch targets (>= 48px)
+
+  orchestration:
+    containerization: docker
+    composition: docker-compose
+
+    requirements:
+      - MUST provide Dockerfile for backend
+      - MUST provide Dockerfile for frontend
+      - MUST provide docker-compose.yml
+      - MUST ensure backend, frontend, and database communicate via Docker network
+
+standards:
+
+  architecture:
+    - MUST follow Clean Architecture principles
+    - MUST follow Domain-Driven Design (DDD)
+    - MUST separate domain, application, and infrastructure layers
+    - MUST NOT allow domain layer to depend on infrastructure
+
+  typing:
+    - MUST enforce strict typing end-to-end
+    - MUST avoid use of "any" in TypeScript
+    - MUST define explicit types for all API contracts
+
+  api:
+    - MUST follow RESTful conventions
+    - MUST validate all inputs
+    - MUST return standardized HTTP status codes
+    - MUST return HTTP 422 for validation errors
+    - MUST return HTTP 500 for unexpected failures
+
+  specifications:
+    - MUST use RFC 2119 keywords (MUST, SHOULD, MAY)
+    - MUST define behavior using Given/When/Then format
+    - MUST include at least one success scenario per spec
+    - MUST include explicit error scenarios
+    - MUST define observable behavior only (NOT implementation details)
+    - MUST define API error responses explicitly (e.g., 400, 422, 500)
+
+  frontend_behavior:
+    - MUST display loading states during async operations
+    - MUST disable user actions while requests are in progress
+    - MUST provide clear visual feedback for success and error states
+
+  pwa:
+    - MUST implement Service Worker
+    - MUST support offline mode
+    - MUST cache user favorites locally
+    - MUST use a stale-while-revalidate caching strategy
+
+  security:
+    - MUST use Magic Link authentication
+    - MUST NOT implement password-based authentication
+    - MUST validate all inputs on backend
+    - MUST ensure HTTPS usage
+
+  testing:
+    - MUST include unit tests for use cases
+    - MUST validate business rules
+    - SHOULD include integration tests for API endpoints
+
+  devops:
+    - MUST use Docker for all services
+    - MUST use docker-compose for local orchestration
+    - SHOULD include CI pipeline (e.g., GitHub Actions)
+    - MUST enforce linting and formatting
+
+custom:
+
+  light_table:
+    - MUST activate Screen Wake Lock API when available
+    - MUST fallback to alternative method if Wake Lock is unsupported
+    - MUST enter fullscreen mode during activation
+    - MUST prevent touch and scroll interactions during use
+    - MUST maintain correct physical scale based on device pixel ratio
+    - MUST require intentional gesture to exit the mode
+
+  favorites:
+    - MUST limit to 100 items per user
+    - MUST be available offline
+    - MUST sync with backend when connection is restored
+
+  accessibility:
+    - MUST use high contrast UI
+    - MUST avoid complex navigation flows
+    - MUST prioritize usability for low digital literacy users

@@ -37,13 +37,79 @@ A arquitetura é dividida em um Backend (FastAPI) focado em persistência e vali
 
 ## Data Model
 
-*   **PostgreSQL (Relacional):**
-    *   `patterns`: id, title, image_path, scale_metadata, difficulty_level.
-    *   `collections`: id, title, cover_image.
-    *   `users`: id, email (Magic Link identifier).
-    *   `user_patterns`: link entre usuários e seus favoritos.
-*   **IndexedDB (Client-side):**
-    *   Cache de metadados de riscos favoritados para carregamento instantâneo offline.
+### PostgreSQL (Relacional)
+
+#### Tabela `users`
+
+Mapeia a entidade **`BaúPessoal`** no nível de identidade. Identificação sem senha — o `email` é o identificador primário para emissão de Magic Links.
+
+| Coluna | Tipo | Constraints | Descrição |
+|---|---|---|---|
+| `id` | `UUID` | `PK`, `DEFAULT gen_random_uuid()` | Identificador único da usuária |
+| `email` | `VARCHAR(320)` | `NOT NULL`, `UNIQUE` | E-mail usado no fluxo Magic Link |
+| `created_at` | `TIMESTAMPTZ` | `NOT NULL`, `DEFAULT now()` | Data de cadastro |
+| `last_login_at` | `TIMESTAMPTZ` | | Último acesso autenticado |
+
+---
+
+#### Tabela `collections`
+
+Mapeia a entidade **`Coleção`**. Agrupamento curatorial de riscos (ex: "Natal", "Iniciantes").
+
+| Coluna | Tipo | Constraints | Descrição |
+|---|---|---|---|
+| `id` | `UUID` | `PK`, `DEFAULT gen_random_uuid()` | Identificador único da coleção |
+| `title` | `VARCHAR(150)` | `NOT NULL` | Nome da coleção |
+| `cover_image_path` | `TEXT` | `NOT NULL` | Caminho do asset de capa no storage |
+| `created_at` | `TIMESTAMPTZ` | `NOT NULL`, `DEFAULT now()` | Data de criação |
+
+---
+
+#### Tabela `patterns`
+
+Entidade raiz **`Risco`**. Contém o payload visual e os invariantes de escala física.
+
+| Coluna | Tipo | Constraints | Descrição |
+|---|---|---|---|
+| `id` | `UUID` | `PK`, `DEFAULT gen_random_uuid()` | Identificador único do molde |
+| `collection_id` | `UUID` | `FK → collections(id)`, `ON DELETE SET NULL` | Coleção à qual pertence (opcional) |
+| `title` | `VARCHAR(200)` | `NOT NULL` | Nome do risco |
+| `image_path` | `TEXT` | `NOT NULL` | Caminho da imagem SVG/PNG no storage |
+| `thumbnail_path` | `TEXT` | `NOT NULL` | Caminho da miniatura para listagem/offline |
+| `scale_cm_reference` | `NUMERIC(6,2)` | `NOT NULL` | Dimensão física de referência em centímetros (invariante de escala da Mesa de Luz) |
+| `difficulty_level` | `SMALLINT` | `NOT NULL`, `CHECK (difficulty_level BETWEEN 1 AND 5)` | Nível de dificuldade (1 = iniciante, 5 = avançado) |
+| `created_at` | `TIMESTAMPTZ` | `NOT NULL`, `DEFAULT now()` | Data de publicação |
+
+> **Índices:** `idx_patterns_collection_id` em `collection_id` para consultas de catálogo filtrado por coleção.
+
+---
+
+#### Tabela `user_patterns`
+
+Tabela de junção que realiza o agregado **`BaúPessoal`** — relação M:N entre usuárias e seus moldes favoritados.
+
+| Coluna | Tipo | Constraints | Descrição |
+|---|---|---|---|
+| `user_id` | `UUID` | `PK (composta)`, `FK → users(id)`, `ON DELETE CASCADE` | Referência à usuária |
+| `pattern_id` | `UUID` | `PK (composta)`, `FK → patterns(id)`, `ON DELETE CASCADE` | Referência ao molde favoritado |
+| `favorited_at` | `TIMESTAMPTZ` | `NOT NULL`, `DEFAULT now()` | Data em que o molde foi salvo no Baú |
+| `synced_offline` | `BOOLEAN` | `NOT NULL`, `DEFAULT FALSE` | Indica se o asset HD já foi baixado pelo Service Worker |
+
+> **Constraint:** `CHECK` implícito na camada de aplicação limitando a **100 favoritos por usuária**, conforme definido no caso de uso `BaúPessoal`.
+
+---
+
+### Relacionamentos
+
+```
+users (1) ──────────────── (N) user_patterns (N) ──── (1) patterns
+                                                              │
+collections (1) ─────────────────────────────────────── (N) patterns
+```
+
+### IndexedDB (Client-side)
+
+Cache de metadados de riscos favoritados para carregamento instantâneo offline. Espelha um subconjunto das colunas de `patterns` e `user_patterns`, sincronizado pelo Service Worker após cada ação de favoritar.
 
 ## System Flow
 
