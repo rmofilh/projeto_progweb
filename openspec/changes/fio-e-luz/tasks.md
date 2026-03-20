@@ -1,48 +1,29 @@
-# Tarefas de Implementação: Fio & Luz
+# Tarefas de Implementação: Fio & Luz (Anti-Hallucination Aligned)
 
-## 1. Setup do Projeto e Infraestrutura
+## Fase 1: Infraestrutura Estrita (Docker & Banco de Dados)
+- [ ] 1.1 Criar a topologia `docker-compose.yml` definindo os serviços `db` (postgres:15), `api` e `web` acoplados em uma rede interna.
+- [ ] 1.2 Configurar as variáveis de ambiente base (ex: `DATABASE_URL`) nos módulos para que a injeção funcione de cara.
+- [ ] 1.3 Subir o serviço do banco (`docker compose up db -d`) e validar se a porta 5432 está operacional e aceitando conexões.
 
-- [ ] 1.1 Configurar ambiente Backend com FastAPI e Pydantic
-- [ ] 1.2 Configurar ambiente Frontend com Next.js (App Router) e TypeScript
-- [ ] 1.3 Configurar banco de dados PostgreSQL com SQLModel/SQLAlchemy
-- [ ] 1.4 Criar Dockerfile multi-stage para Backend e Frontend
-- [ ] 1.5 Configurar validações de linting e tipos em ambos os projetos
+## Fase 2: Backend Base (SQLModel, FastAPI & Pydantic)
+- [ ] 2.1 Configurar o projeto Python (Dockerfile com `python:3.10`, FastAPI e uvicorn) focado no serviço `api`.
+- [ ] 2.2 Criar a Entidade base do banco (usando SQLModel) garantindo que reflete as tabelas propostas no design.
+- [ ] 2.3 Criar os contratos Pydantic v2 rigorosos (e.g. `PatternCreate`, `PatternResponse`) com as anotações exatas de tipo exigidas.
+- [ ] 2.4 Criar a rota GET raiz `/` no FastAPI mapeando o SwaggerUI e retornando 200 OK.
+- [ ] 2.5 Levantar o container da API (`docker compose up api`) e validar via Curl se a rota raiz e os Schemas de erro padrão (422) funcionam e o banco se conectou no startup.
 
-## 2. Modelo de Dados e API (Backend)
+## Fase 3: Frontend Base (Next.js App Router & Shadcn)
+- [ ] 3.1 Inicializar o "PWA Shell" via Next.js com App Router configurando estritamente TypeScript em todos os arquivos.
+- [ ] 3.2 Configurar o TailwindCSS implementando no `theme.extend` o design system (Cores Alabaster/Charcoal, Fontes Lora/Outfit).
+- [ ] 3.3 Inicializar e instalar os 5 componentes chave restritos do Shadcn/UI: Button, Card, Input, Skeleton e Toast. Proibido forjar componentes complexos na mão.
+- [ ] 3.4 Validar o frontend injetando temporariamente um `[ ] Button` do Shadcn na página raiz para checar a renderização (RSC vs Client limits).
 
-- [ ] 2.1 Implementar Entidade `Risco` e Migrações (tabela `patterns`)
-- [ ] 2.2 Implementar Entidade `Coleção` e Migrações (tabela `collections`)
-- [ ] 2.3 Implementar endpoints de listagem e detalhe de moldes (`/v1/patterns`)
-- [ ] 2.4 Implementar sistema de Magic Link para autenticação via e-mail
-- [ ] 2.5 Implementar endpoints do Baú Pessoal (favoritos) e persistência
+## Fase 4: Implementação do Domínio Restrito & UI
+- [ ] 4.1 Implementar a página de Catálogo (Discovery) exigindo que seja um *Server Component* para injetar os dados vindo da API.
+- [ ] 4.2 Inserir na rota referida o tratamento exato de Skeleton fallback via Shadcn caso o fetch demore ou dê erro (Testes Manuais de Offline).
+- [ ] 4.3 Implementar o Módulo "Engine de Mesa de Luz" separando numa sub-pasta estrita utilizando o pragma `'use client'` ativando a Wake Lock API.
+- [ ] 4.4 Configurar cenários de Crash/Error Toast (500 do DB down e 422 param fail) acionando notificações Shadcn Toast no PWA Shell.
 
-## 3. Interface e Experiência do Usuário (Frontend)
-
-- [ ] 3.1 Implementar Design System básico (Cores Alabaster/Charcoal e Fontes Lora/Outfit)
-- [ ] 3.2 Criar página de Catálogo principal com grid responsivo e busca
-- [ ] 3.3 Implementar Onboarding guiado (perguntas visuais) para novas usuárias
-- [ ] 3.4 Criar visualização de Detalhes do Risco com metadados de cm/bastidor
-- [ ] 3.5 Implementar fluxo de Favoritos com sincronização local/servidor
-
-## 4. Mesa de Luz Móvel (Core Feature)
-
-- [ ] 4.1 Implementar lógica de ativação da Screen Wake Lock API
-- [ ] 4.2 Criar Overlay de isolamento de toque (captura de eventos Pointer/Touch)
-- [ ] 4.3 Implementar lógica de calibração de escala física (`devicePixelRatio`)
-- [ ] 4.4 Criar interface de Mesa de Luz (Preto puro sobre Branco brilhante, Fullscreen)
-- [ ] 4.5 Implementar saída segura via toque longo (gesto intencional)
-
-## 5. Resiliência e PWA
-
-- [ ] 5.1 Configurar Manifesto PWA e Service Worker básico
-- [ ] 5.2 Implementar Cache Storage para assets estáticos e shell da aplicação
-- [ ] 5.3 Implementar offline-first para o Baú Pessoal (carregamento HD via SW)
-- [ ] 5.4 Implementar Fallback para Wake Lock (NoSleep.js + Modal Instrucional)
-- [ ] 5.5 Configurar IndexedDB para persistência de metadados offline
-
-## 6. Verificação e Qualidade
-
-- [ ] 6.1 Implementar testes unitários para a lógica de escala física
-- [ ] 6.2 Criar testes de integração para os endpoints críticos da API
-- [ ] 6.3 Validar acessibilidade (WCAG AAA) em fluxos principais
-- [ ] 6.4 Realizar teste de fumaça da PWA em dispositivos Android e iOS
+## Fase 5: Persistência Resiliente e PWA
+- [ ] 5.1 Implementar sistema IndexedDB local para refletir favoritos.
+- [ ] 5.2 Amarrar sistema de Background Sync (Service Worker) para interceptar os POST favorites que ocorrerem off-grid.

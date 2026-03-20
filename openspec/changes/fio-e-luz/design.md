@@ -28,6 +28,15 @@ A arquitetura é dividida em um Backend (FastAPI) focado em persistência e vali
 *   **PWA Shell (Next.js/App Router):** Gerencia o ciclo de vida da aplicação no cliente, incluindo Service Workers para cache de assets e imagens.
 *   **Mesa de Luz Engine:** Módulo frontend específico que encapsula as APIs de hardware (Wake Lock, Fullscreen) e a lógica de calibração de escala.
 
+### Docker Topology (Orchestration)
+
+The stack MUST be orchestrated via `docker-compose.yml` ensuring network isolation:
+- **Service `db`**: Uses `postgres:15` image, exposes 5432, holds the single source of truth.
+- **Service `api`**: Uses `python:3.10` standard image, runs FastAPI via Uvicorn (port 8000), relies on `DATABASE_URL` env var.
+- **Service `web`**: Uses `node:20` image, runs Next.js server (port 3000).
+- **Network**: All services must communicate over an internal `app-network`.
+
+
 ## Domain Model
 
 *   **`Risco`:** Entidade raiz. Contém o payload visual (SVG/PNG) e as invariantes de escala (`cm_reference`).
@@ -123,16 +132,40 @@ Cache de metadados de riscos favoritados para carregamento instantâneo offline.
 4.  **Uso:** Usuária realiza o decalque físico sobre a tela.
 5.  **Finalização:** Toque longo detectado pelo overlay dispara a liberação do Wake Lock e restaura a UI.
 
-## API Design
+## API Design & TypeSafe Contracts (Pydantic / FastAPI)
 
-*   `GET /v1/patterns`: Listagem com filtros de coleção.
-*   `GET /v1/patterns/{id}`: Detalhamento e metadados de escala.
-*   `POST /v1/favorites/{id}`: Persistência de favorito (dispara download no Service Worker).
-*   `POST /v1/auth/magic-link`: Emite token por e-mail para acesso simples.
+- The backend MUST strictly map the database models to Pydantic schemas.
+- **Database ORM:** SQLModel (built on SQLAlchemy 2.0).
 
-## Frontend / Client Implementation
+### TypeSafe Contracts
+- `PatternBase` (Pydantic Schema): Fields shared for creation/reading (title, difficulty, scale_cm_reference).
+- `PatternCreate` (Pydantic Schema): Strict schema for input validation, missing fields return explicit HTTP 422.
+- `PatternResponse` (Pydantic Schema): Outgoing representation, strictly mapping the ORM entity to JSON.
 
-Implementado em TypeScript/React utilizando:
+### Endpoints
+*   `GET /v1/patterns`: Return list of `PatternResponse`.
+*   `GET /v1/patterns/{id}`: Return single `PatternResponse`.
+*   `POST /v1/favorites/{id}`: Persist favorite. If db fails, MUST return HTTP 500.
+*   `POST /v1/auth/magic-link`: Issue email token.
+
+## Frontend / Client Implementation (Next.js Architecture)
+
+- **Framework:** Next.js (App Router)
+- **Styling:** TailwindCSS
+- **Component Ecosystem:** shadcn/ui
+
+### Architecture Separation
+- **Server Components (RSC):** The main catalog pages (e.g., `app/(catalog)/page.tsx`) MUST be Server Components to fetch initial data efficiently.
+- **Client Components ('use client'):** The Light Table Engine (`app/light-table/page.tsx`) MUST be a Client Component to securely access `window.navigator.wakeLock` and other DOM APIs.
+
+### Shadcn/UI Explicit Mapping
+To prevent UI hallucination, you MUST ONLY use the following components from Shadcn/UI (do not build standard components from scratch via Tailwind):
+- `[x] Button` (for all CTAs and actions)
+- `[x] Card` (for pattern collections and vault items)
+- `[x] Input` (for search areas)
+- `[x] Skeleton` (for loading states when API delays)
+- `[x] Toast` (for system error alerts, e.g., PostgreSQL offline)
+
 *   **Framer Motion:** Para transições suaves entre estados de descoberta e mesa de luz.
 *   **NoSleep.js:** Como fallback para manter a tela ativa em ambientes sem suporte à Wake Lock API.
 *   **TailwindCSS:** Para definições de layout responsivo com foco em touch targets de 56px.

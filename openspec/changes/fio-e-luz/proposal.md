@@ -2,7 +2,7 @@
 
 ## 1. Introdução
 
-O presente documento propõe a arquitetura e a execução de uma aplicação web full-stack comercialmente viável e socialmente impactante, doravante denominada **"Fio & Luz"**. O sistema visa suprir as necessidades de praticantes de bordado livre, oferecendo um catálogo digital curado de moldes (riscos) e, como diferencial tecnológico primário, uma ferramenta de hardware-software integrada batizada de "Mesa de Luz Móvel". 
+O presente documento propõe a arquitetura e a execução de uma aplicação web full-stack socialmente impactante, doravante denominada **"Fio & Luz"**. O sistema visa suprir as necessidades de praticantes de bordado livre, oferecendo um catálogo digital curado de moldes (riscos) e, como diferencial tecnológico primário, uma ferramenta de hardware-software integrada batizada de "Mesa de Luz Móvel". 
 
 A fundação do projeto pauta-se nos princípios de controle estrito de estado, tipagem forte de ponta a ponta (end-to-end type safety) e na segregação das lógicas de negócio central através do Domain-Driven Design (DDD) e Clean Architecture, garantindo escalabilidade e facilidade de manutenção a longo prazo.
 
