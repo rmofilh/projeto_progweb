@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: fio-e-luz-db
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-fioeluz}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-fioeluz_pass}
+      - POSTGRES_DB=${POSTGRES_DB:-fioeluz_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-fioeluz} -d $${POSTGRES_DB:-fioeluz_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fio-e-luz-api
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-fioeluz}:${POSTGRES_PASSWORD:-fioeluz_pass}@db:5432/${POSTGRES_DB:-fioeluz_db}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fio-e-luz-web
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
