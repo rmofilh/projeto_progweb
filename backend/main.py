@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from database import create_db_and_tables
+from core.database import create_db_and_tables
 
 app = FastAPI(title="Fio & Luz API")
 
 @app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
+async def on_startup():
+    await create_db_and_tables()
 
 @app.get("/")
 async def root():
