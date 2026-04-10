@@ -1,11 +1,15 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from core.database import create_db_and_tables
 
-app = FastAPI(title="Fio & Luz API")
-
-@app.on_event("startup")
-async def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Executado ao ligar a API
     await create_db_and_tables()
+    yield
+    # Código após o yield executaria ao desligar a API
+
+app = FastAPI(title="Fio & Luz API", lifespan=lifespan)
 
 @app.get("/")
 async def root():

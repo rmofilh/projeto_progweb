@@ -4,3 +4,9 @@ sqlmodel==0.0.16
 pydantic[email]==2.6.1
 asyncpg==0.29.0
 redis==5.0.1
+
+# Testing
+pytest==8.0.0
+pytest-asyncio==0.23.5
+httpx==0.26.0
+pytest-cov==4.1.0
