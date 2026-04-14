@@ -3,6 +3,14 @@ from typing import Optional, List
 from uuid import UUID, uuid4
 from sqlmodel import Field, SQLModel, Relationship
 
+class MagicLink(SQLModel, table=True):
+    __tablename__ = "magic_links"
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    user_id: UUID = Field(foreign_key="users.id")
+    token: str = Field(index=True)
+    expires_at: datetime
+    used: bool = Field(default=False)
+
 class UserPattern(SQLModel, table=True):
     __tablename__ = "user_patterns"
     user_id: UUID = Field(foreign_key="users.id", primary_key=True)

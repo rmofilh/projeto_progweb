@@ -34,21 +34,25 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - ./backend:/app
     networks:
       - app-network
 
-  web:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: fio-e-luz-web
-    restart: always
-    ports:
-      - "3000:3000"
-    depends_on:
-      - api
-    networks:
-      - app-network
+#  web:
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#    container_name: fio-e-luz-web
+#    restart: always
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - api
+#    volumes:
+#      - ./frontend:/app
+#    networks:
+#      - app-network
 
 networks:
   app-network:

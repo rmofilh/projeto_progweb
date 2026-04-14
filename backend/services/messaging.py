@@ -5,22 +5,26 @@ import datetime
 
 class MessageBroker:
     def __init__(self):
-        # self.redis_client = redis.Redis(host='redis', port=6379, db=0)
+        # Mocking initialization. In production, this would connect to Redis.
         pass
 
     def publish(self, topic: str, payload: dict, correlation_id: str) -> None:
         """
-        Envelopes the message guaranteeing Observability (Correção 6).
+        Envelopes the message guaranteeing Observability.
+        In this MOCK version, we print the JSON envelope to the console.
         """
         envelope = {
             "correlation_id": correlation_id,
             "metadata": {
                 "timestamp": datetime.datetime.utcnow().isoformat(),
-                "topic": topic
+                "topic": topic,
+                "environment": "development-mock"
             },
             "data": payload
         }
-        # In a real app: self.redis_client.lpush(topic, json.dumps(envelope))
-        print(f"[BROKER EMIT] Topic: {topic} | Correlation ID: {correlation_id} | Payload: {payload}")
+        
+        # Simula envio para a rede
+        log_msg = json.dumps(envelope, indent=2)
+        print(f"\n[BROKER MOCK] Dispatching to {topic}:\n{log_msg}\n")
 
 broker = MessageBroker()

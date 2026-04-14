@@ -1,28 +1,31 @@
 import uuid
 from sqlmodel.ext.asyncio.session import AsyncSession
-from domain.models import UserPattern
+from repositories.favorite_repository import FavoriteRepository
 from services.messaging import broker
 
 class FavoriteService:
     def __init__(self, session: AsyncSession):
-        self.session = session
+        self.repository = FavoriteRepository(session)
 
     async def add_favorite(self, user_id: uuid.UUID, pattern_id: uuid.UUID, correlation_id: str) -> dict:
         """
-        Responsibility isolated. (Correção 5)
-        Creates Outbox Initial Record before dispatching (Correção 1).
+        Gerecia a lógica de favoritar utilizando o repositório para persistência.
+        Inclui checagem de limite e idempotência.
         """
-        # Passo 1: Outbox Pattern inicial - salvando a intenção de forma resiliente
-        user_pattern = UserPattern(
-            user_id=user_id,
-            pattern_id=pattern_id,
-            status="PROCESSING" # Correção 1: Registra rastreabilidade antes do evento
-        )
-        self.session.add(user_pattern)
-        # Correção 2: Tratando DB puramente como motor Async Otmizado
-        await self.session.commit()
+        # Checagem de limite (Regra de Negócio: Max 100)
+        count = await self.repository.get_count_for_user(user_id)
+        if count >= 100:
+            return {"status": "error", "message": "Limite de 100 favoritos atingido no seu Baú Pessoal."}
 
-        # Passo 2: Emissão do evento de fato ao Message Broker garantindo Correlation ID
+        # Checagem de Idempotência: Se já existe, apenas ignora
+        existing = await self.repository.get_by_user_and_pattern(user_id, pattern_id)
+        if existing:
+            return {"status": "already_favorited", "correlation_id": correlation_id}
+
+        # Passo 1: Registro inicial resiliente (Outbox)
+        await self.repository.add(user_id, pattern_id)
+
+        # Passo 2: Emissão do evento de fato ao Message Broker
         broker.publish(
             topic="favorites_queue",
             payload={"user_id": str(user_id), "pattern_id": str(pattern_id)},
