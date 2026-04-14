@@ -39,20 +39,25 @@ services:
     networks:
       - app-network
 
-#  web:
-#    build:
-#      context: ./frontend
-#      dockerfile: Dockerfile
-#    container_name: fio-e-luz-web
-#    restart: always
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - api
-#    volumes:
-#      - ./frontend:/app
-#    networks:
-#      - app-network
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fio-e-luz-web
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      api:
+        condition: service_started
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - app-network
 
 networks:
   app-network:

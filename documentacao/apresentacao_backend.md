@@ -1,7 +1,9 @@
 # Apresentação: Backend Fio & Luz — Arquitetura, Domínio e Casos de Uso
 
 ---
-
+Explicar rapidamente as bibliotecas e seu uso em (requirements.txt)
+TDD
+---
 ## Slide 1 — Introdução: O Que é o Fio & Luz?
 
 **Fio & Luz** é uma Progressive Web App (PWA) projetada para bordadeiras e artesãs. Sua função principal é emular uma mesa de luz física diretamente na tela do dispositivo móvel, permitindo que a usuária decalque moldes (riscos) sobre tecido sem equipamentos adicionais.

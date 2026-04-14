@@ -19,10 +19,10 @@
 - [x] 2.5.4 **Passo 4: Refinamento de Banco (Otimização I/O)**. Mover de driver síncrono para `asyncpg` e `AsyncSession` no SQLModel. Tratar isso expressamente como uma *otimização de performance local*, não como a fundação arquitetural que o EDA já forneceu (Correção 2).
 
 ## Fase 3: Frontend Base (Next.js App Router & Shadcn)
-- [ ] 3.1 Inicializar o "PWA Shell" via Next.js com App Router configurando estritamente TypeScript em todos os arquivos.
-- [ ] 3.2 Configurar o TailwindCSS implementando no `theme.extend` o design system (Cores Alabaster/Charcoal, Fontes Lora/Outfit).
-- [ ] 3.3 Inicializar e instalar os 5 componentes chave restritos do Shadcn/UI: Button, Card, Input, Skeleton e Toast. Proibido forjar componentes complexos na mão.
-- [ ] 3.4 Validar o frontend injetando temporariamente um `[ ] Button` do Shadcn na página raiz para checar a renderização (RSC vs Client limits).
+- [x] 3.1 Inicializar o "PWA Shell" via Next.js com App Router configurando estritamente TypeScript em todos os arquivos.
+- [x] 3.2 Configurar o TailwindCSS implementando no `theme.extend` o design system (Cores Alabaster/Charcoal, Fontes Lora/Outfit).
+- [x] 3.3 Inicializar e instalar os 5 componentes chave restritos do Shadcn/UI: Button, Card, Input, Skeleton e Toast. Proibido forjar componentes complexos na mão.
+- [x] 3.4 Validar o frontend injetando temporariamente um `[ ] Button` do Shadcn na página raiz para checar a renderização (RSC vs Client limits).
 
 ## Fase 4: Implementação do Domínio Restrito & UI
 - [ ] 4.1 Implementar a página de Catálogo (Discovery) exigindo que seja um *Server Component* para injetar os dados vindo da API.
