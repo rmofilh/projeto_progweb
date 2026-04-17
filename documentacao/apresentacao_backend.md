@@ -6,6 +6,7 @@
 ## Antes de começar
 
 Deixe aberto no editor:
+- Rodar: docker compose up -d e docker compose exec api pytest --cov=. -v
 - Painel lateral com a árvore de arquivos do `backend/`
 - Terminal pronto para rodar `pytest`
 
@@ -17,7 +18,8 @@ Deixe aberto no editor:
 
 **Fale:**
 
-> "A estrutura de pastas **é** a arquitetura. Cada diretório corresponde a uma camada da Clean Architecture. A regra fundamental é que as dependências só apontam para dentro: `api/` conhece `services/`, `services/` conhece `domain/`, mas `domain/` não conhece ninguém. Qualquer coisa dentro de `domain/` pode ser testada sem banco, sem HTTP, sem Docker."
+> "A estrutura de pastas reflete nossa Clean Architecture Pragmática. Cada diretório corresponde a uma camada. Embora o SQLModel no domínio crie um acoplamento técnico com o ORM, fizemos essa escolha para manter o princípio DRY e evitar redundância. O desacoplamento real é mantido pela regra de dependência: a lógica de negócio nos Services não sabe 'como' o banco funciona."
+
 
 ---
 
@@ -29,7 +31,8 @@ Deixe aberto no editor:
 
 **Fale:**
 
-> "Aqui fica o coração do sistema — as entidades de negócio. `SQLModel` faz duas coisas ao mesmo tempo: define a tabela no PostgreSQL **e** valida os dados com Pydantic. O campo `status` em `UserPattern` é uma máquina de estados: nasce como `PROCESSING` e o worker assíncrono muda para `DONE` depois. O `difficulty_level` com `ge=1, le=5` é um invariante de domínio — o objeto simplesmente não existe se o valor for inválido."
+> "Aqui fica o coração do sistema. Usamos `SQLModel` de forma pragmática para unificar a definição da Tabela e da Entidade. Embora isso pareça quebrar a pureza da Clean Architecture, na prática garante que as regras de domínio (como o `difficulty_level` entre 1 e 5) sejam validadas em um único lugar, eliminando bugs de sincronização entre camadas."
+
 
 **Mostre:** abra `domain/schemas.py`.
 
@@ -128,7 +131,8 @@ pytest tests/ -v
 
 **Mostre o resultado passando e encerre:**
 
-> "Clean Architecture significa que cada camada tem uma razão única para mudar. Se o banco muda, só o repositório muda. Se o broker muda, só o `MessageBroker` muda. Se a regra de negócio muda, só o service muda. O domínio nunca muda por causa de infraestrutura."
+> "Clean Architecture Pragmática significa que cada camada tem uma razão única para mudar. Aceitamos o acoplamento do ORM no domínio como um trade-off para ter um código mais simples e seguro. O importante é que a política de negócio está isolada da infraestrutura, e os testes provam que o sistema é resiliente."
+
 
 ---
 
@@ -144,3 +148,27 @@ pytest tests/ -v
 | 6 | `workers/` + broker — DLQ, correlation_id | ~1 min |
 | 7 | `tests/` — AsyncClient, smoke test, rodar pytest | ~1 min |
 | **Total** | | **~10 min** |
+
+---
+
+## Anexo A: Funcionalidades e Persistência (O "O que faz" e "Como guarda")
+
+Se o professor perguntar sobre o propósito real do backend além da arquitetura:
+
+### 🗄️ 1. Como os dados são guardados?
+*   **Tecnologia:** PostgreSQL (Banco Relacional).
+*   **Onde ver:** `backend/domain/models.py`.
+*   **Explicação:** O sistema usa **SQLModel** para mapear classes Python diretamente para tabelas. A integridade é garantida por relacionamentos (FKs) e Triggers SQL (`core/database.py`).
+
+### ⚙️ 2. Principais Funcionalidades
+1.  **Autenticação Passwordless (`services/auth.py`):** Login via e-mail (Magic Link) e emissão de JWT. Segurança sem a necessidade de gerenciar senhas.
+2.  **Catálogo Organizado (`services/patterns.py`):** Gestão de coleções e moldes (riscos) para a bordadeira consultar.
+3.  **Baú Pessoal (`services/favorites.py`):** Sistema de favoritos com regra de negócio customizada (limite de 100 itens por usuário).
+4.  **Processamento em Background (`workers/favorite_worker.py`):** Arquitetura orientada a eventos. Quando um molde é favoritado, o processamento pesado ocorre de forma assíncrona para não travar a resposta da API.
+
+### 🔄 3. Fluxo de Dados (Exemplo: Favoritar)
+1.  **Entrada:** `api/routes/favorites.py` (Recebe o pedido).
+2.  **Lógica:** `services/favorites.py` (Valida o limite e idempotência).
+3.  **Persistência:** `repositories/favorite_repository.py` (Executa o INSERT no Postgres).
+4.  **Evento:** `services/messaging.py` (Notifica o Worker para processar).
+
