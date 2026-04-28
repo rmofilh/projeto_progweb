@@ -52,10 +52,10 @@ services:
     depends_on:
       api:
         condition: service_started
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
+    # volumes:
+    #   - ./frontend:/app
+    #   - /app/node_modules
+    #   - /app/.next
     networks:
       - app-network
 

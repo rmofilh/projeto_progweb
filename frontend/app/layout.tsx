@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Sistema de Apoio ao Bordado Manual",
 };
 
+import { Toaster } from "@/components/ui/sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +32,10 @@ export default function RootLayout({
       lang="pt-BR"
       className={cn("h-full", "antialiased", lora.variable, outfit.variable, "font-sans", geist.variable)}
     >
-      <body className="min-h-full flex flex-col font-outfit">{children}</body>
+      <body className="min-h-full flex flex-col font-outfit">
+        {children}
+        <Toaster position="top-center" richColors />
+      </body>
     </html>
   );
 }
