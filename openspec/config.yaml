@@ -18,6 +18,47 @@ context:
       - MUST validate all request and response schemas using Pydantic
       - MUST generate OpenAPI schema automatically
 
+      # Clean Architecture enforcement
+      - MUST follow strict Clean Architecture (adapters → use_cases → domain)
+      - MUST follow Domain-Driven Design (DDD)
+
+      # Domain rules
+      - MUST implement a rich domain model (entities with behavior, not anemic)
+      - MUST enforce fail-fast validation inside entities
+      - MUST define domain-specific exceptions
+      - MUST define repository contracts (Protocols) inside domain
+      - MUST NOT import FastAPI, SQLAlchemy, or any framework inside domain
+      - MUST NOT allow persistence or HTTP knowledge inside domain
+
+      # Use case rules
+      - MUST implement use cases as orchestration only
+      - MUST NOT contain business logic in use cases
+      - MUST NOT mutate entity state directly (must call entity methods)
+      - MUST use constructor injection for dependencies
+      - MUST NOT instantiate repositories inside use cases
+      - MUST NOT depend on concrete repository implementations
+
+      # API rules
+      - MUST implement thin controllers
+      - MUST NOT contain business logic in controllers
+      - MUST map domain exceptions to HTTP responses
+      - MUST perform transaction commit ONLY in API layer
+
+      # Persistence rules
+      - MUST implement repositories in adapters layer
+      - MUST convert ORM models to domain entities using _to_entity
+      - MUST NOT return ORM models outside persistence layer
+      - MUST NOT perform commit inside repository
+
+      # Cross-cutting rules
+      - MUST prevent logic leakage (business rules outside domain are forbidden)
+      - MUST NOT allow anemic domain models
+      - MUST ensure all dependencies point inward
+
+      # Async rules
+      - MUST be 100% async (no blocking IO)
+      - MUST use async/await in all external operations
+
   frontend:
     framework: nextjs
     router: app-router
@@ -48,6 +89,7 @@ standards:
     - MUST follow Clean Architecture principles
     - MUST follow Domain-Driven Design (DDD)
     - MUST separate domain, application, and infrastructure layers
+    - MUST enforce dependency rule (dependencies point inward only)
 
   typing:
     - MUST enforce strict typing end-to-end
@@ -87,5 +129,6 @@ standards:
 
   testing:
     - MUST include unit tests for use cases
-    - MUST validate business rules
+    - MUST include unit tests for domain entities
+    - MUST validate business rules explicitly
     - SHOULD include integration tests for API endpoints
