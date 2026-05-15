@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Maximize2, X, Ruler } from 'lucide-react';
 import { toast } from 'sonner';
-import { useScaleCalibration } from '@/src/adapters/hooks/useScaleCalibration';
+import { useScaleCalibration } from '@/src/presentation/hooks/useScaleCalibration';
 import { ScaleEngine } from '@/src/domain/value_objects/ScaleEngine';
 import { CalibrationOverlay } from '@/components/calibration-overlay';
 import { Pattern } from '@/src/domain/entities/Pattern';

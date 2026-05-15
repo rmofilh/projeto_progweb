@@ -1,4 +1,4 @@
-import { MockPatternRepository } from "@/src/adapters/repositories/MockPatternRepository";
+import { MockPatternRepository } from "@/src/infrastructure/repositories/MockPatternRepository";
 import { LightTableEngine } from "@/components/light-table/engine";
 import { AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';

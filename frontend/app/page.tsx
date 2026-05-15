@@ -3,7 +3,7 @@ import { Footer } from "@/components/footer";
 import { Catalog } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MockPatternRepository } from "@/src/adapters/repositories/MockPatternRepository";
+import { MockPatternRepository } from "@/src/infrastructure/repositories/MockPatternRepository";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 

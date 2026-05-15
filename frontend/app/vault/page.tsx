@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/header";
@@ -9,20 +8,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Heart, ChevronRight, ArchiveX } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { MockPatternRepository } from "@/src/adapters/repositories/MockPatternRepository";
-import { Pattern, getDifficultyLabel } from "@/src/domain/entities/Pattern";
+import { useFavorites } from "@/src/presentation/hooks/useFavorites";
+import { getDifficultyLabel } from "@/src/domain/entities/Pattern";
 
 export default function VaultPage() {
-  const [favorites, setFavorites] = useState<Pattern[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const repo = new MockPatternRepository();
-
-  useEffect(() => {
-    repo.getFavorites().then(data => {
-      setFavorites(data);
-      setIsLoading(false);
-    });
-  }, []);
+  const { data: favorites = [], isLoading } = useFavorites();
 
   return (
     <div className="flex flex-col min-h-screen bg-alabaster font-outfit text-charcoal">
