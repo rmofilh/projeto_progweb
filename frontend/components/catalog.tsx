@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Search, Heart, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Pattern, getDifficultyLabel } from "@/src/domain/entities/Pattern";
+import { useFavorites } from "@/src/presentation/hooks/useFavorites";
+import { useToggleFavorite } from "@/src/presentation/hooks/useToggleFavorite";
 
 interface CatalogProps {
   initialPatterns: Pattern[];
@@ -16,6 +18,10 @@ interface CatalogProps {
 
 export function Catalog({ initialPatterns }: CatalogProps) {
   const [searchTerm, setSearchTerm] = useState("");
+  const { data: favorites = [] } = useFavorites();
+  const toggleFavoriteMutation = useToggleFavorite();
+
+  const isFavorite = (id: string) => favorites.some(f => f.id === id);
 
   const filteredPatterns = initialPatterns.filter(p => 
     p.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -51,8 +57,13 @@ export function Catalog({ initialPatterns }: CatalogProps) {
                   className="object-contain p-8 group-hover:scale-105 transition-transform duration-500" 
                 />
                 <div className="absolute top-4 right-4">
-                  <Button variant="secondary" size="icon" className="rounded-full bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white">
-                    <Heart className="w-5 h-5" />
+                  <Button 
+                    variant="secondary" 
+                    size="icon" 
+                    className="rounded-full bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white"
+                    onClick={() => toggleFavoriteMutation.mutate(pattern.id)}
+                  >
+                    <Heart className={cn("w-5 h-5", isFavorite(pattern.id) ? "fill-red-500 text-red-500" : "")} />
                   </Button>
                 </div>
               </div>

@@ -1,13 +1,8 @@
 import { Pattern } from "@/src/domain/entities/Pattern";
-import { MockPatternRepository } from "@/src/infrastructure/repositories/MockPatternRepository";
+import { IPatternRepository } from "@/src/domain/repositories/IPatternRepository";
 
 export class GetFavoritesUseCase {
-  private repository: MockPatternRepository;
-
-  constructor() {
-    // No futuro, isso pode vir via injeção de dependência DI
-    this.repository = new MockPatternRepository();
-  }
+  constructor(private repository: IPatternRepository) {}
 
   async execute(): Promise<Pattern[]> {
     // Aqui podemos ter regras de negócios antes de bater no banco

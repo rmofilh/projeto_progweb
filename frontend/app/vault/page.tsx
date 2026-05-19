@@ -9,10 +9,12 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Heart, ChevronRight, ArchiveX } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useFavorites } from "@/src/presentation/hooks/useFavorites";
+import { useToggleFavorite } from "@/src/presentation/hooks/useToggleFavorite";
 import { getDifficultyLabel } from "@/src/domain/entities/Pattern";
 
 export default function VaultPage() {
   const { data: favorites = [], isLoading } = useFavorites();
+  const toggleFavoriteMutation = useToggleFavorite();
 
   return (
     <div className="flex flex-col min-h-screen bg-alabaster font-outfit text-charcoal">
@@ -55,8 +57,13 @@ export default function VaultPage() {
                         className="object-contain p-8 group-hover:scale-105 transition-transform duration-500" 
                       />
                       <div className="absolute top-4 right-4">
-                        <Button variant="secondary" size="icon" className="rounded-full bg-white/80 backdrop-blur-sm shadow-sm text-red-500 hover:bg-white">
-                          <Heart className="w-5 h-5 fill-current" />
+                        <Button 
+                          variant="secondary" 
+                          size="icon" 
+                          className="rounded-full bg-white/80 backdrop-blur-sm shadow-sm hover:bg-white"
+                          onClick={() => toggleFavoriteMutation.mutate(pattern.id)}
+                        >
+                          <Heart className="w-5 h-5 fill-red-500 text-red-500" />
                         </Button>
                       </div>
                     </div>

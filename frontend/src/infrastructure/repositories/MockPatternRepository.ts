@@ -51,11 +51,27 @@ export class MockPatternRepository implements IPatternRepository {
     return MOCK_PATTERNS.filter(p => p.collectionId === collectionId);
   }
 
+  private getFavoriteIds(): string[] {
+    if (typeof window === 'undefined') return [];
+    const stored = localStorage.getItem('fioeluz_favorites');
+    return stored ? JSON.parse(stored) : [];
+  }
+
   async getFavorites(): Promise<Pattern[]> {
-    return MOCK_PATTERNS.slice(0, 1);
+    const favoriteIds = this.getFavoriteIds();
+    return MOCK_PATTERNS.filter(p => favoriteIds.includes(p.id));
   }
 
   async toggleFavorite(patternId: string): Promise<void> {
-    console.log(`Toggling favorite for ${patternId}`);
+    if (typeof window === 'undefined') return;
+    let favoriteIds = this.getFavoriteIds();
+    
+    if (favoriteIds.includes(patternId)) {
+      favoriteIds = favoriteIds.filter(id => id !== patternId);
+    } else {
+      favoriteIds.push(patternId);
+    }
+    
+    localStorage.setItem('fioeluz_favorites', JSON.stringify(favoriteIds));
   }
 }

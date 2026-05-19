@@ -2,7 +2,6 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Catalog } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { MockPatternRepository } from "@/src/infrastructure/repositories/MockPatternRepository";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -59,21 +58,6 @@ export default async function Home() {
           <Catalog initialPatterns={patterns} />
         </Suspense>
 
-        {/* Community */}
-        <section className="py-20 px-6 bg-charcoal text-white rounded-t-[4rem]">
-          <div className="container mx-auto max-w-4xl text-center">
-            <h2 className="text-4xl font-lora font-bold mb-6">Participe da nossa comunidade</h2>
-            <p className="text-xl text-zinc-300 mb-10 max-w-xl mx-auto leading-relaxed">
-              Receba novos riscos toda semana diretamente no seu e-mail e compartilhe suas criações.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <Input placeholder="Seu melhor e-mail" className="h-14 rounded-full bg-white/10 border-white/20 text-white placeholder:text-zinc-400" />
-              <Button className="h-14 px-8 rounded-full bg-white text-charcoal hover:bg-zinc-100">
-                Inscrever
-              </Button>
-            </div>
-          </div>
-        </section>
       </main>
 
       <Footer />

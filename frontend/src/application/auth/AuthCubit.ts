@@ -1,5 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { AuthSession } from "@/src/domain/entities/User";
+import { IAuthRepository } from "@/src/domain/repositories/IAuthRepository";
+import { MockAuthRepository } from "@/src/infrastructure/repositories/MockAuthRepository";
 
 type AuthState = 
   | { status: "initial" }
@@ -11,6 +13,8 @@ type AuthState =
 export class AuthCubit {
   private state: AuthState = { status: "initial" };
   private listeners: Set<(state: AuthState) => void> = new Set();
+
+  constructor(private authRepository: IAuthRepository) {}
 
   subscribe(listener: (state: AuthState) => void) {
     this.listeners.add(listener);
@@ -31,34 +35,32 @@ export class AuthCubit {
   async loginMock(token: string) {
     try {
       this.emit({ status: "loading" });
-      // Decode JWT futuramente...
-      // const decoded = jwtDecode(token);
+      const session = await this.authRepository.authenticate(token);
       
-      const mockSession: AuthSession = {
-        user: { id: "u1", email: "user@example.com" },
-        token: token,
-      };
-
       this.emit({ 
         status: "authenticated", 
-        session: mockSession, 
+        session: session, 
         claims: { role: "admin" } 
       });
-      
-      if (typeof window !== 'undefined') {
-        localStorage.setItem("token", token);
-      }
     } catch (error: any) {
       this.emit({ status: "error", message: error.message });
     }
   }
 
-  logout() {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem("token");
+  async requestMagicLink(email: string) {
+    try {
+      this.emit({ status: "loading" });
+      await this.authRepository.requestMagicLink(email);
+      this.emit({ status: "unauthenticated" });
+    } catch (error: any) {
+      this.emit({ status: "error", message: error.message });
     }
+  }
+
+  async logout() {
+    await this.authRepository.logout();
     this.emit({ status: "unauthenticated" });
   }
 }
 
-export const authCubit = new AuthCubit();
+export const authCubit = new AuthCubit(new MockAuthRepository());

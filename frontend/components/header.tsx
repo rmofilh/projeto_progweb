@@ -1,8 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Search, Lightbulb, User } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -32,17 +31,10 @@ export function Header() {
           >
             Meu Baú
           </Link>
-          <Link href="#" className="hover:text-charcoal/70 transition-colors text-zinc-400 cursor-not-allowed">Sobre</Link>
+          <Link href="/login" className="text-lg font-medium text-charcoal hover:text-charcoal/70 transition-colors">
+            Entrar
+          </Link>
         </nav>
-
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Search className="w-6 h-6" />
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <User className="w-6 h-6" />
-          </Button>
-        </div>
       </div>
     </header>
   );
