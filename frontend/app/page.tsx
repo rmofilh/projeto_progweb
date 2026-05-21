@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { MockPatternRepository } from "@/src/infrastructure/repositories/MockPatternRepository";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { HeroClient } from "@/components/hero-client";
 
 function CatalogSkeleton() {
   return (
@@ -27,6 +28,7 @@ function CatalogSkeleton() {
 export default async function Home() {
   const repo = new MockPatternRepository();
   const patterns = await repo.listAll();
+  const collections = await repo.listCollections();
 
   return (
     <div className="flex flex-col min-h-screen bg-alabaster font-outfit text-charcoal">
@@ -42,20 +44,13 @@ export default async function Home() {
             <p className="text-xl text-zinc-600 mb-10 max-w-2xl mx-auto leading-relaxed">
               Encontre riscos exclusivos e use nossa <span className="font-semibold text-charcoal">Mesa de Luz Digital</span> para transferir seus desenhos diretamente para o tecido.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="h-14 px-8 text-lg rounded-full bg-charcoal hover:bg-charcoal/90 transition-all">
-                Ver Catálogo Completo
-              </Button>
-              <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-full border-charcoal text-charcoal hover:bg-zinc-50">
-                Como Funciona?
-              </Button>
-            </div>
+            <HeroClient />
           </div>
         </section>
 
         {/* Catalog Section with Suspense & RSC Data Fetching */}
         <Suspense fallback={<CatalogSkeleton />}>
-          <Catalog initialPatterns={patterns} />
+          <Catalog initialPatterns={patterns} collections={collections} />
         </Suspense>
 
       </main>

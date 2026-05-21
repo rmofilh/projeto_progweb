@@ -7,7 +7,17 @@ describe('MockAuthRepository (Infrastructure Layer)', () => {
   beforeEach(() => {
     repo = new MockAuthRepository();
     if (typeof window !== 'undefined') {
-      localStorage.clear();
+      let store: Record<string, string> = {};
+      Object.defineProperty(window, 'localStorage', {
+        value: {
+          getItem: (key: string) => store[key] || null,
+          setItem: (key: string, value: string) => { store[key] = value.toString(); },
+          removeItem: (key: string) => { delete store[key]; },
+          clear: () => { store = {}; }
+        },
+        writable: true
+      });
+      window.localStorage.clear();
     }
   });
 

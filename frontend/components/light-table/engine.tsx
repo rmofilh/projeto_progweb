@@ -11,6 +11,10 @@ import { ScaleEngine } from '@/src/domain/value_objects/ScaleEngine';
 import { CalibrationOverlay } from '@/components/calibration-overlay';
 import { Pattern } from '@/src/domain/entities/Pattern';
 
+import { useCuratorialSuggestions } from '@/src/presentation/hooks/useCuratorialSuggestions';
+import { CheckCircle2, AlertTriangle, Circle } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
 interface LightTableEngineProps {
   pattern: Pattern;
 }
@@ -20,8 +24,19 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [wakeLock, setWakeLock] = useState<any>(null);
   const [showCalibration, setShowCalibration] = useState(false);
+  const [opacity, setOpacity] = useState(1);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [hoopSize, setHoopSize] = useState<number | null>(null);
+  
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const thermalTimer = useRef<NodeJS.Timeout | null>(null);
   const { scale, saveCalibration, isCalibrated } = useScaleCalibration();
+  
+  const { data: suggestions } = useCuratorialSuggestions(pattern.id);
+
+  useEffect(() => {
+    setIsDesktop(typeof window !== 'undefined' && !('ontouchstart' in window));
+  }, []);
 
   // Wake Lock Logic
   const requestWakeLock = async () => {
@@ -41,33 +56,58 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
       if (wakeLock) {
         wakeLock.release();
       }
+      if (thermalTimer.current) clearTimeout(thermalTimer.current);
     };
   }, [wakeLock]);
+
+  const exitFullscreen = () => {
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+    setIsFullscreen(false);
+    if (thermalTimer.current) clearTimeout(thermalTimer.current);
+  };
+
+  // Escape key for desktop
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        exitFullscreen();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
 
   // Fullscreen Logic
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      setIsFullscreen(true);
-      requestWakeLock();
-      toast.success("Mesa de Luz Ativada", {
-        description: "Brilho máximo garantido. Toque longo para sair."
+      document.documentElement.requestFullscreen().then(() => {
+        setIsFullscreen(true);
+        requestWakeLock();
+        toast.success("Mesa de Luz Ativada", {
+          description: isDesktop ? "Brilho máximo garantido. Pressione ESC ou clique na tela para sair." : "Brilho máximo garantido. Toque longo para sair."
+        });
+
+        thermalTimer.current = setTimeout(() => {
+          toast.warning("Aviso Térmico", {
+            description: "A tela está em brilho máximo há 5 minutos. Pode ser bom dar uma pausa para resfriar o aparelho.",
+            duration: 8000
+          });
+        }, 5 * 60 * 1000); // 5 minutes
+      }).catch(err => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
       });
     } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-        setIsFullscreen(false);
-      }
+      exitFullscreen();
     }
   };
 
-  // Long Press Exit Logic
+  // Long Press Exit Logic (Mobile)
   const handleTouchStart = () => {
+    if (isDesktop) return;
     longPressTimer.current = setTimeout(() => {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-        setIsFullscreen(false);
-      }
+      exitFullscreen();
     }, 1500);
   };
 
@@ -77,57 +117,140 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
     }
   };
 
+  const preventGestures = (e: any) => {
+    if (!isDesktop) e.preventDefault();
+  };
+
   return (
     <div className={`flex flex-col min-h-screen bg-white transition-all duration-500 ${isFullscreen ? 'p-0 overflow-hidden' : 'p-6'}`}>
       {!isFullscreen && (
-        <div className="max-w-2xl mx-auto w-full">
-          <header className="flex items-center justify-between mb-8">
-            <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full">
-              <X className="w-6 h-6" />
-            </Button>
-            <h1 className="text-xl font-lora font-bold">{pattern.title}</h1>
-            <div className="w-10" />
-          </header>
+        <div className="max-w-4xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Left Column: Image and Simulator */}
+          <div>
+            <header className="flex items-center gap-4 mb-6">
+              <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full shrink-0 bg-zinc-100">
+                <X className="w-6 h-6" />
+              </Button>
+              <h1 className="text-2xl font-lora font-bold">{pattern.title}</h1>
+            </header>
 
-          <div className="bg-zinc-100 rounded-3xl aspect-square flex items-center justify-center mb-8 overflow-hidden shadow-inner">
-            <Image 
-              src={pattern.imagePath} 
-              alt={pattern.title} 
-              width={500} 
-              height={500} 
-              className="object-contain p-12 mix-blend-multiply opacity-80" 
-            />
+            <div className="bg-zinc-100 rounded-3xl aspect-square flex items-center justify-center mb-6 overflow-hidden shadow-inner relative group">
+              <Image 
+                src={pattern.imagePath} 
+                alt={pattern.title} 
+                width={500} 
+                height={500} 
+                className="object-contain p-12 mix-blend-multiply opacity-80" 
+              />
+              
+              {/* Hoop Simulator Overlay */}
+              {hoopSize && (
+                <div 
+                  className="absolute rounded-full border-4 border-amber-500/50 shadow-[0_0_0_9999px_rgba(255,255,255,0.6)] pointer-events-none transition-all duration-300"
+                  style={{ 
+                    width: `${(hoopSize / pattern.scaleCmReference) * 100}%`,
+                    height: `${(hoopSize / pattern.scaleCmReference) * 100}%`
+                  }}
+                />
+              )}
+            </div>
+
+            <div className="bg-white border border-zinc-200 rounded-2xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Circle className="w-5 h-5 text-zinc-500" />
+                <h4 className="font-bold text-sm uppercase tracking-wider text-zinc-500">Simulador de Bastidor</h4>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button 
+                  variant={hoopSize === null ? "default" : "secondary"} 
+                  size="sm" 
+                  onClick={() => setHoopSize(null)}
+                  className="rounded-full"
+                >
+                  Ocultar
+                </Button>
+                {[10, 14, 18, 22].map(size => (
+                  <Button 
+                    key={size}
+                    variant={hoopSize === size ? "default" : "secondary"} 
+                    size="sm"
+                    onClick={() => setHoopSize(size)}
+                    className="rounded-full"
+                  >
+                    {size}cm
+                  </Button>
+                ))}
+              </div>
+              <p className="text-xs text-zinc-400 mt-3">
+                Visualize como o risco de {pattern.scaleCmReference}cm ficará enquadrado no seu bastidor.
+              </p>
+            </div>
           </div>
 
-          <div className="space-y-6">
+          {/* Right Column: Controls and Info */}
+          <div className="space-y-6 pt-2 lg:pt-16">
+            <div className={cn("p-4 rounded-2xl border flex items-start gap-4", isCalibrated ? "bg-green-50 border-green-200 text-green-900" : "bg-amber-50 border-amber-200 text-amber-900")}>
+              {isCalibrated ? <CheckCircle2 className="w-6 h-6 shrink-0 text-green-600 mt-1" /> : <AlertTriangle className="w-6 h-6 shrink-0 text-amber-600 mt-1" />}
+              <div>
+                <h3 className="font-bold">{isCalibrated ? "Calibrada ✅" : "Padrão (Não Calibrado) ⚠️"}</h3>
+                <p className="text-sm opacity-80 mt-1">
+                  {isCalibrated 
+                    ? `Sua tela foi calibrada fisicamente. O tamanho real garantido é ${pattern.scaleCmReference}cm.` 
+                    : "Calibre a tela usando um cartão magnético para garantir o tamanho físico real."}
+                </p>
+                <Button 
+                  variant="link" 
+                  className={cn("p-0 h-auto mt-2 font-bold", isCalibrated ? "text-green-700" : "text-amber-700")}
+                  onClick={() => setShowCalibration(true)}
+                >
+                  {isCalibrated ? 'Recalibrar' : 'Calibrar agora'}
+                </Button>
+              </div>
+            </div>
+
+            <Button 
+              onClick={toggleFullscreen}
+              className="w-full h-16 rounded-2xl text-xl font-bold bg-charcoal hover:bg-charcoal/90 gap-3 shadow-lg"
+            >
+              <Maximize2 className="w-6 h-6" />
+              Ativar Mesa de Luz
+            </Button>
+
             <div className="bg-zinc-50 p-6 rounded-2xl border border-zinc-200">
               <h3 className="font-bold mb-2">Instruções de Uso:</h3>
-              <ul className="text-zinc-600 space-y-2 list-disc pl-5">
+              <ul className="text-zinc-600 space-y-2 list-disc pl-5 text-sm">
+                <li>Aumente o brilho do seu aparelho ao máximo.</li>
                 <li>Coloque seu tecido sobre a tela do dispositivo.</li>
-                <li>Ao ativar o modo Mesa de Luz, a tela ficará em brilho máximo.</li>
                 <li>O toque na tela será desativado para evitar deslocamentos.</li>
-                <li><strong>Para sair:</strong> Pressione o centro da tela por 2 segundos.</li>
+                <li><strong>Para sair:</strong> Pressione a tela por 2s (ou ESC no desktop).</li>
               </ul>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <Button 
-                onClick={toggleFullscreen}
-                className="w-full h-16 rounded-full text-xl font-bold bg-charcoal hover:bg-charcoal/90 gap-3"
-              >
-                <Maximize2 className="w-6 h-6" />
-                Ativar Mesa de Luz
-              </Button>
-
-              <Button 
-                variant="ghost"
-                onClick={() => setShowCalibration(true)}
-                className="w-full h-12 rounded-full text-zinc-500 gap-2"
-              >
-                <Ruler className="w-4 h-4" />
-                {isCalibrated ? 'Recalibrar Escala' : 'Calibrar Escala'}
-              </Button>
-            </div>
+            {suggestions && (
+              <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
+                <h3 className="font-bold mb-4 text-blue-900 flex items-center gap-2">
+                  <span className="text-xl">💡</span> Dicas Curatoriais
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-sm text-blue-800 mb-1">Fios Sugeridos</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {suggestions.threads.map(t => (
+                        <span key={t} className="px-2 py-1 bg-white border border-blue-200 text-blue-700 text-xs rounded-md">{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm text-blue-800 mb-1">Pontos Ideais</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {suggestions.stitches.map(s => (
+                        <span key={s} className="px-2 py-1 bg-white border border-blue-200 text-blue-700 text-xs rounded-md">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -145,31 +268,57 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
 
       {isFullscreen && (
         <div 
-          className="fixed inset-0 z-[100] bg-white flex items-center justify-center cursor-none select-none touch-none"
+          className={`fixed inset-0 z-[100] bg-white flex items-center justify-center select-none ${isDesktop ? 'cursor-default' : 'cursor-none touch-none'}`}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          onMouseDown={handleTouchStart}
-          onMouseUp={handleTouchEnd}
+          onTouchMove={preventGestures}
+          onWheel={preventGestures}
+          onClick={isDesktop ? exitFullscreen : undefined}
+          // @ts-ignore - For gesturechange in Safari
+          onGestureChange={preventGestures} 
         >
+          {/* iOS Fallback WakeLock (Invisível) */}
+          <video autoPlay loop muted playsInline className="hidden pointer-events-none" src="data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAACg8IUBgQGFh6CWAQAAAAAAACz1BAABAAAArB2FAYKGAQAAP9uGgQOFgQEBAQABAQAAAQEQgQQBAQEAoICBgICAgIKAAICAAAAAAAAFkAAAFuIAAAABfB2GAQBvY29kZWMDVP+BAAAABO2DgwGAgKCRgYCgoI2CAgMAAACqjg4BAQEAwIEEAQEBAKCAgYCAgICAgICAgICAgICAgICAgICAgICAgICAgICAAICAgICAgICAhICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIKAAIAAAAAAAAAA" />
+
+          {/* Controle Flutuante de Opacidade */}
+          <div 
+            className="absolute top-8 left-1/2 -translate-x-1/2 w-64 p-4 bg-white/90 backdrop-blur-md rounded-3xl shadow-xl flex flex-col gap-3 z-[110]"
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
+          >
+             <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 text-center">Opacidade do Desenho</span>
+             <input 
+               type="range" 
+               min="0.1" 
+               max="1" 
+               step="0.05" 
+               value={opacity} 
+               onChange={(e) => setOpacity(parseFloat(e.target.value))} 
+               className="w-full accent-charcoal" 
+             />
+          </div>
+
           <div className="relative w-full h-full flex items-center justify-center p-4">
             <div 
               style={{ 
                 width: `${ScaleEngine.cmToPixels(pattern.scaleCmReference, scale)}px`,
-                aspectRatio: '1/1'
+                aspectRatio: '1/1',
+                opacity: opacity
               }}
-              className="relative"
+              className="relative transition-opacity duration-200"
             >
               <Image 
                 src={pattern.imagePath} 
                 alt={pattern.title} 
                 fill
-                className="object-contain invert-0 contrast-125 brightness-110" 
+                className="object-contain invert-0 contrast-125 brightness-110 pointer-events-none" 
                 priority
               />
             </div>
             
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-zinc-300 text-xs font-medium uppercase tracking-[0.2em] opacity-20">
-              Pressione para sair
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-zinc-300 text-xs font-medium uppercase tracking-[0.2em] opacity-30 pointer-events-none">
+              {isDesktop ? 'Clique ou pressione ESC para sair' : 'Pressione para sair'}
             </div>
           </div>
         </div>

@@ -1,0 +1,14 @@
+{
+  "1": {
+    "threads": ["DMC 310 (Preto)", "DMC 666 (Vermelho Brilhante)", "DMC 704 (Verde Limão)"],
+    "stitches": ["Ponto Atrás", "Ponto Cheio", "Ponto Margarida"]
+  },
+  "2": {
+    "threads": ["DMC 310 (Preto)", "DMC 414 (Cinza Escuro)", "DMC 415 (Cinza Perolado)"],
+    "stitches": ["Ponto Haste", "Ponto Matiz"]
+  },
+  "3": {
+    "threads": ["DMC 798 (Azul Del Rey)", "DMC 725 (Amarelo Ouro)"],
+    "stitches": ["Ponto Atrás", "Ponto Pirulito", "Nó Francês"]
+  }
+}

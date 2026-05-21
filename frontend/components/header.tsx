@@ -4,9 +4,17 @@ import Link from "next/link";
 import { Lightbulb } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { authCubit } from "@/src/application/auth/AuthCubit";
 
 export function Header() {
   const pathname = usePathname();
+  const [authState, setAuthState] = useState(authCubit.getState());
+
+  useEffect(() => {
+    const unsubscribe = authCubit.subscribe(setAuthState);
+    return () => { unsubscribe(); };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
@@ -31,9 +39,25 @@ export function Header() {
           >
             Meu Baú
           </Link>
-          <Link href="/login" className="text-lg font-medium text-charcoal hover:text-charcoal/70 transition-colors">
-            Entrar
-          </Link>
+          
+          {authState.status === "authenticated" ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-zinc-500">{authState.session?.user?.email || "mock@fioeluz.com"}</span>
+              <button 
+                onClick={() => authCubit.logout()} 
+                className="text-lg font-medium text-charcoal hover:text-charcoal/70 transition-colors"
+              >
+                Sair
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => authCubit.loginMock("mock-token")}
+              className="text-lg font-medium text-charcoal hover:text-charcoal/70 transition-colors"
+            >
+              Entrar (Mock)
+            </button>
+          )}
         </nav>
       </div>
     </header>

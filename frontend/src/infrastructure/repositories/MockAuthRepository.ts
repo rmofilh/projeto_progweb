@@ -7,8 +7,8 @@ export class MockAuthRepository implements IAuthRepository {
   }
 
   async authenticate(token: string): Promise<AuthSession> {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem("token", token);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem("token", token);
     }
     return {
       user: { id: "u1", email: "user@example.com" },
@@ -17,15 +17,15 @@ export class MockAuthRepository implements IAuthRepository {
   }
 
   async logout(): Promise<void> {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem("token");
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.removeItem("token");
     }
     console.log("Logged out");
   }
 
   async getCurrentSession(): Promise<AuthSession | null> {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem("token");
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const token = window.localStorage.getItem("token");
       if (token) {
         return {
           user: { id: "u1", email: "user@example.com" },
