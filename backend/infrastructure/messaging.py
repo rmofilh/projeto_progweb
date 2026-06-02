@@ -18,3 +18,6 @@ class MockMessageBroker(IMessagingProtocol):
         
         log_msg = json.dumps(envelope, indent=2)
         print(f"\n[INFRA BROKER MOCK] Dispatching to {topic}:\n{log_msg}\n")
+
+
+broker = MockMessageBroker()
