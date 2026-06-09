@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none" stroke="#000" stroke-width="2">
+  <title>Folha de Samambaia</title>
+  <!-- Main stem -->
+  <path d="M250 470 Q240 350 250 230 Q260 110 250 30" stroke-width="3.5"/>
+  <!-- Left fronds -->
+  <g stroke-width="2">
+    <path d="M248 430 Q180 400 120 380 Q100 375 90 380"/>
+    <path d="M248 390 Q170 350 100 330 Q80 325 70 330"/>
+    <path d="M250 350 Q180 300 110 280 Q90 275 80 280"/>
+    <path d="M250 310 Q190 260 130 240 Q110 235 100 240"/>
+    <path d="M252 270 Q200 220 150 200 Q130 195 120 200"/>
+    <path d="M252 230 Q210 185 170 165 Q155 158 145 162"/>
+    <path d="M254 190 Q220 150 190 135 Q178 130 170 135"/>
+    <path d="M254 150 Q230 120 210 108 Q200 104 195 108"/>
+    <path d="M256 110 Q242 88 230 80 Q224 77 220 80"/>
+    <path d="M256 70 Q248 55 240 50 Q236 48 234 50"/>
+  </g>
+  <!-- Right fronds -->
+  <g stroke-width="2">
+    <path d="M252 430 Q320 400 380 380 Q400 375 410 380"/>
+    <path d="M252 390 Q330 350 400 330 Q420 325 430 330"/>
+    <path d="M250 350 Q320 300 390 280 Q410 275 420 280"/>
+    <path d="M250 310 Q310 260 370 240 Q390 235 400 240"/>
+    <path d="M248 270 Q300 220 350 200 Q370 195 380 200"/>
+    <path d="M248 230 Q290 185 330 165 Q345 158 355 162"/>
+    <path d="M246 190 Q280 150 310 135 Q322 130 330 135"/>
+    <path d="M246 150 Q270 120 290 108 Q300 104 305 108"/>
+    <path d="M244 110 Q258 88 270 80 Q276 77 280 80"/>
+    <path d="M244 70 Q252 55 260 50 Q264 48 266 50"/>
+  </g>
+  <!-- Leaflet details (small veins on some fronds) -->
+  <g stroke-width="1" stroke-opacity="0.4">
+    <path d="M180 395 L175 385 M160 388 L155 378 M140 383 L135 373"/>
+    <path d="M320 395 L325 385 M340 388 L345 378 M360 383 L365 373"/>
+    <path d="M190 340 L185 330 M165 328 L160 318 M140 318 L135 308"/>
+    <path d="M310 340 L315 330 M335 328 L340 318 M360 318 L365 308"/>
+  </g>
+  <!-- Spores along back of frond -->
+  <g fill="#000" fill-opacity="0.15">
+    <circle cx="248" cy="440" r="3"/>
+    <circle cx="249" cy="400" r="3"/>
+    <circle cx="250" cy="360" r="3"/>
+    <circle cx="250" cy="320" r="3"/>
+    <circle cx="251" cy="280" r="3"/>
+    <circle cx="251" cy="240" r="3"/>
+    <circle cx="252" cy="200" r="2.5"/>
+    <circle cx="253" cy="160" r="2.5"/>
+    <circle cx="254" cy="120" r="2"/>
+    <circle cx="254" cy="80" r="2"/>
+  </g>
+  <!-- Curled tip (fiddlehead) -->
+  <path d="M250 30 Q248 20 245 15 Q240 10 238 12 Q235 16 238 22 Q240 26 244 25" stroke-width="2.5"/>
+</svg>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none" stroke="#000" stroke-width="2">
+  <title>Rosas Selvagens</title>
+  <!-- Main stem -->
+  <path d="M250 460 Q240 380 250 300 Q260 220 250 140" stroke-width="3"/>
+  <!-- Branch stems -->
+  <path d="M248 350 Q200 320 160 280" stroke-width="2.5"/>
+  <path d="M252 250 Q300 220 330 190" stroke-width="2.5"/>
+  <path d="M250 170 Q210 140 180 120" stroke-width="2"/>
+  <!-- Thorns -->
+  <path d="M245 380 L230 375 M255 320 L270 315 M248 280 L235 275 M255 220 L268 215" stroke-width="2"/>
+  <!-- Rose 1 - top -->
+  <circle cx="250" cy="120" r="40" stroke-width="3"/>
+  <path d="M250 90 Q270 100 280 120 Q290 140 270 150 Q250 155 230 150 Q210 140 220 120 Q225 100 250 90Z" stroke-width="2.5"/>
+  <path d="M250 100 Q260 115 250 130 Q240 115 250 100Z" stroke-width="2"/>
+  <path d="M235 115 Q245 110 250 120 Q240 130 235 115Z" stroke-width="1.5"/>
+  <path d="M265 110 Q258 115 260 125 Q268 120 265 110Z" stroke-width="1.5"/>
+  <!-- Rose 2 - left -->
+  <circle cx="170" cy="270" r="35" stroke-width="3"/>
+  <path d="M170 245 Q185 255 190 270 Q195 288 180 295 Q165 300 155 290 Q145 275 155 260 Q160 245 170 245Z" stroke-width="2.5"/>
+  <path d="M170 255 Q178 265 172 278 Q164 268 170 255Z" stroke-width="2"/>
+  <!-- Rose 3 - right -->
+  <circle cx="320" cy="180" r="30" stroke-width="3"/>
+  <path d="M320 158 Q332 165 338 178 Q342 193 330 200 Q318 205 308 195 Q300 182 308 168 Q312 158 320 158Z" stroke-width="2.5"/>
+  <path d="M320 168 Q326 176 322 185 Q316 178 320 168Z" stroke-width="2"/>
+  <!-- Leaves -->
+  <path d="M200 310 Q170 290 180 260 Q190 270 200 310Z" fill="#000" fill-opacity="0.08"/>
+  <path d="M180 255 Q160 240 165 220 Q175 230 180 255Z" fill="#000" fill-opacity="0.08"/>
+  <path d="M300 220 Q330 200 320 175 Q310 190 300 220Z" fill="#000" fill-opacity="0.08"/>
+  <path d="M330 200 Q350 180 340 160 Q330 175 330 200Z" fill="#000" fill-opacity="0.08"/>
+  <path d="M260 300 Q280 280 300 290 Q285 310 260 300Z" fill="#000" fill-opacity="0.08"/>
+  <!-- Leaf veins -->
+  <path d="M195 295 Q185 280 182 268" stroke-width="1.5"/>
+  <path d="M310 208 Q322 195 325 182" stroke-width="1.5"/>
+  <path d="M275 292 Q282 288 290 290" stroke-width="1.5"/>
+  <!-- Bud -->
+  <path d="M240 400 Q235 385 245 375 Q255 385 250 400Z" stroke-width="2"/>
+  <path d="M238 390 Q230 385 232 378" stroke-width="1.5"/>
+</svg>

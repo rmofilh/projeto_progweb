@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none" stroke="#000" stroke-width="2.5">
+  <title>Gato na Lua</title>
+  <!-- Crescent Moon -->
+  <path d="M100 80 Q200 50 280 120 Q350 180 340 260 Q330 330 260 370 Q180 400 120 380 Q200 340 240 260 Q270 190 230 120 Q180 60 100 80Z" stroke-width="3"/>
+  <!-- Moon inner detail lines -->
+  <path d="M160 140 Q200 120 220 160" stroke-width="1.5"/>
+  <path d="M140 200 Q180 180 200 220" stroke-width="1.5"/>
+  <!-- Stars -->
+  <circle cx="350" cy="100" r="4" fill="#000"/>
+  <circle cx="400" cy="180" r="3" fill="#000"/>
+  <circle cx="380" cy="300" r="3.5" fill="#000"/>
+  <circle cx="420" cy="250" r="2" fill="#000"/>
+  <circle cx="80" cy="200" r="3" fill="#000"/>
+  <circle cx="60" cy="300" r="2.5" fill="#000"/>
+  <!-- Cat silhouette sitting on moon -->
+  <path d="M220 260 Q230 220 240 230 Q250 200 260 190 Q270 180 280 200 Q290 210 300 230 Q310 220 320 250 Q330 270 330 300 Q330 340 300 360 Q280 370 260 370 Q240 370 220 360 Q200 340 200 310 Q200 280 220 260Z" stroke-width="3"/>
+  <!-- Cat ears -->
+  <path d="M230 220 L225 185 L250 210" stroke-width="2.5"/>
+  <path d="M280 200 L300 180 L295 215" stroke-width="2.5"/>
+  <!-- Cat eyes -->
+  <ellipse cx="250" cy="280" rx="8" ry="5" fill="#000" fill-opacity="0.4"/>
+  <ellipse cx="290" cy="275" rx="8" ry="5" fill="#000" fill-opacity="0.4"/>
+  <!-- Cat nose -->
+  <path d="M265 295 L262 300 L268 300Z" fill="#000" fill-opacity="0.3"/>
+  <!-- Cat whiskers -->
+  <path d="M240 295 L200 290 M240 300 L200 305 M242 305 L205 315" stroke-width="1.5"/>
+  <path d="M280 290 L310 285 M280 295 L310 290 M278 300 L308 308" stroke-width="1.5"/>
+  <!-- Cat tail curling -->
+  <path d="M200 340 Q180 350 160 330 Q140 310 150 280 Q155 265 170 270" stroke-width="3"/>
+  <!-- Cat paws -->
+  <path d="M230 365 Q225 375 230 380 Q235 375 235 365" stroke-width="2"/>
+  <path d="M270 365 Q265 375 270 380 Q275 375 275 365" stroke-width="2"/>
+</svg>

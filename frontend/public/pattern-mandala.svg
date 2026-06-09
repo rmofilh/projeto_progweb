@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none" stroke="#000" stroke-width="2">
+  <title>Mandala Geométrica</title>
+  <g transform="translate(250,250)">
+    <!-- Outermost ring -->
+    <circle cx="0" cy="0" r="230" stroke-width="3"/>
+    <circle cx="0" cy="0" r="220" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="210" stroke-width="1"/>
+    <!-- Outer petals (16) -->
+    <g stroke-width="2">
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" fill="#000" fill-opacity="0.05"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(22.5)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(45)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(67.5)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(90)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(112.5)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(135)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(157.5)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(180)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(202.5)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(225)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(247.5)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(270)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(292.5)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(315)"/>
+      <path d="M0 -210 Q30 -170 0 -130 Q-30 -170 0 -210Z" transform="rotate(337.5)"/>
+    </g>
+    <!-- Second ring -->
+    <circle cx="0" cy="0" r="125" stroke-width="2.5"/>
+    <circle cx="0" cy="0" r="120" stroke-width="1"/>
+    <!-- Inner petals (8) -->
+    <g stroke-width="2">
+      <path d="M0 -120 Q40 -80 0 -40 Q-40 -80 0 -120Z" fill="#000" fill-opacity="0.08"/>
+      <path d="M0 -120 Q40 -80 0 -40 Q-40 -80 0 -120Z" transform="rotate(45)"/>
+      <path d="M0 -120 Q40 -80 0 -40 Q-40 -80 0 -120Z" transform="rotate(90)"/>
+      <path d="M0 -120 Q40 -80 0 -40 Q-40 -80 0 -120Z" transform="rotate(135)"/>
+      <path d="M0 -120 Q40 -80 0 -40 Q-40 -80 0 -120Z" transform="rotate(180)"/>
+      <path d="M0 -120 Q40 -80 0 -40 Q-40 -80 0 -120Z" transform="rotate(225)"/>
+      <path d="M0 -120 Q40 -80 0 -40 Q-40 -80 0 -120Z" transform="rotate(270)"/>
+      <path d="M0 -120 Q40 -80 0 -40 Q-40 -80 0 -120Z" transform="rotate(315)"/>
+    </g>
+    <!-- Middle ring -->
+    <circle cx="0" cy="0" r="70" stroke-width="2.5"/>
+    <circle cx="0" cy="0" r="65" stroke-width="1"/>
+    <!-- Star pattern (4 points) -->
+    <path d="M0 -65 L15 -25 L55 -35 L25 0 L55 35 L15 25 L0 65 L-15 25 L-55 35 L-25 0 L-55 -35 L-15 -25Z" stroke-width="2" fill="#000" fill-opacity="0.05"/>
+    <!-- Inner circles -->
+    <circle cx="0" cy="0" r="30" stroke-width="2"/>
+    <circle cx="0" cy="0" r="25" stroke-width="1"/>
+    <!-- Decorative dots on outer ring -->
+    <g fill="#000" fill-opacity="0.3">
+      <circle cx="0" cy="-230" r="4"/>
+      <circle cx="162.6" cy="-162.6" r="4"/>
+      <circle cx="230" cy="0" r="4"/>
+      <circle cx="162.6" cy="162.6" r="4"/>
+      <circle cx="0" cy="230" r="4"/>
+      <circle cx="-162.6" cy="162.6" r="4"/>
+      <circle cx="-230" cy="0" r="4"/>
+      <circle cx="-162.6" cy="-162.6" r="4"/>
+    </g>
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="8" fill="#000" fill-opacity="0.2"/>
+    <circle cx="0" cy="0" r="3" fill="#000" fill-opacity="0.4"/>
+  </g>
+</svg>

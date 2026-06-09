@@ -1,14 +1,46 @@
 {
   "1": {
-    "threads": ["DMC 310 (Preto)", "DMC 666 (Vermelho Brilhante)", "DMC 704 (Verde Limão)"],
-    "stitches": ["Ponto Atrás", "Ponto Cheio", "Ponto Margarida"]
+    "threads": ["DMC 702 (Verde Kelly)", "DMC 907 (Verde Limão)", "DMC 310 (Preto)"],
+    "stitches": ["Ponto Atrás", "Ponto Haste", "Ponto Cheio"]
   },
   "2": {
-    "threads": ["DMC 310 (Preto)", "DMC 414 (Cinza Escuro)", "DMC 415 (Cinza Perolado)"],
-    "stitches": ["Ponto Haste", "Ponto Matiz"]
+    "threads": ["DMC 309 (Vermelho Escuro)", "DMC 335 (Rosa)", "DMC 702 (Verde Kelly)", "DMC 310 (Preto)"],
+    "stitches": ["Ponto Cheio", "Ponto Haste", "Ponto Atrás", "Ponto Margarida"]
   },
   "3": {
-    "threads": ["DMC 798 (Azul Del Rey)", "DMC 725 (Amarelo Ouro)"],
-    "stitches": ["Ponto Atrás", "Ponto Pirulito", "Nó Francês"]
+    "threads": ["DMC 310 (Preto)", "DMC 414 (Cinza Escuro)", "DMC 744 (Amarelo Claro)"],
+    "stitches": ["Ponto Atrás", "Ponto Haste", "Ponto Matiz"]
+  },
+  "4": {
+    "threads": ["DMC 310 (Preto)", "DMC 413 (Cinza Chumbo)", "DMC 762 (Cinza Claro)"],
+    "stitches": ["Ponto Atrás", "Ponto Haste", "Ponto Cheio", "Ponto Lançado"]
+  },
+  "5": {
+    "threads": ["DMC 310 (Preto)", "DMC 666 (Vermelho Brilhante)", "DMC 743 (Amarelo)"],
+    "stitches": ["Ponto Atrás", "Ponto Cheio", "Ponto Haste"]
+  },
+  "6": {
+    "threads": ["DMC 310 (Preto)", "DMC 798 (Azul Del Rey)", "DMC 725 (Amarelo Ouro)"],
+    "stitches": ["Ponto Atrás", "Ponto Cheio", "Ponto Pirulito", "Nó Francês"]
+  },
+  "7": {
+    "threads": ["DMC 310 (Preto)", "DMC 415 (Cinza Perolado)", "DMC 3799 (Cinza Aço)"],
+    "stitches": ["Ponto Atrás", "Ponto Haste", "Ponto Estrela"]
+  },
+  "8": {
+    "threads": ["DMC 310 (Preto)", "DMC 550 (Violeta)", "DMC 552 (Malva)"],
+    "stitches": ["Ponto Atrás", "Ponto Cheio", "Ponto Haste", "Nó Francês"]
+  },
+  "9": {
+    "threads": ["DMC 666 (Vermelho Brilhante)", "DMC 704 (Verde Limão)", "DMC 726 (Amarelo Claro)"],
+    "stitches": ["Ponto Atrás", "Ponto Margarida", "Ponto Cheio"]
+  },
+  "10": {
+    "threads": ["DMC 554 (Lavanda)", "DMC 553 (Violeta)", "DMC 702 (Verde Kelly)"],
+    "stitches": ["Ponto Haste", "Ponto Atrás", "Ponto Cheio"]
+  },
+  "11": {
+    "threads": ["DMC 725 (Amarelo Ouro)", "DMC 783 (Ouro)", "DMC 469 (Verde Musgo)"],
+    "stitches": ["Ponto Cheio", "Ponto Atrás", "Ponto Haste", "Ponto Margarida"]
   }
 }

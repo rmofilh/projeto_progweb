@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none" stroke="#000" stroke-width="2">
+  <title>Girassol</title>
+  <!-- Stem -->
+  <path d="M250 480 Q245 380 250 280 Q255 200 250 160" stroke-width="4"/>
+  <!-- Leaves on stem -->
+  <path d="M248 380 Q220 360 200 370 Q190 378 200 385 Q215 390 248 385" stroke-width="2.5"/>
+  <path d="M204 377 L195 370" stroke-width="1.5"/>
+  <path d="M252 320 Q280 300 300 310 Q310 318 300 325 Q285 330 252 325" stroke-width="2.5"/>
+  <path d="M296 320 L305 313" stroke-width="1.5"/>
+  <!-- Flower head center -->
+  <circle cx="250" cy="160" r="45" stroke-width="3"/>
+  <circle cx="250" cy="160" r="38" stroke-width="2"/>
+  <circle cx="250" cy="160" r="32" stroke-width="1.5"/>
+  <!-- Seed pattern in center -->
+  <g stroke-width="1" stroke-opacity="0.35">
+    <path d="M235 145 Q240 140 245 145 Q240 150 235 145Z"/>
+    <path d="M250 140 Q255 135 260 140 Q255 145 250 140Z"/>
+    <path d="M265 145 Q270 140 275 145 Q270 150 265 145Z"/>
+    <path d="M242 155 Q247 150 252 155 Q247 160 242 155Z"/>
+    <path d="M258 155 Q263 150 268 155 Q263 160 258 155Z"/>
+    <path d="M250 155 Q255 150 260 155 Q255 160 250 155Z"/>
+    <path d="M235 160 Q240 155 245 160 Q240 165 235 160Z"/>
+    <path d="M255 160 Q260 155 265 160 Q260 165 255 160Z"/>
+    <path d="M250 165 Q255 160 260 165 Q255 170 250 165Z"/>
+    <path d="M240 170 Q245 165 250 170 Q245 175 240 170Z"/>
+    <path d="M260 170 Q265 165 270 170 Q265 175 260 170Z"/>
+    <path d="M250 175 Q255 170 260 175 Q255 180 250 175Z"/>
+  </g>
+  <!-- Petals (16 around the center) -->
+  <g stroke-width="2.5">
+    <!-- Top -->
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(22.5, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(45, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(67.5, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(90, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(112.5, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(135, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(157.5, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(180, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(202.5, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(225, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(247.5, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(270, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(292.5, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(315, 250, 160)" fill="#000" fill-opacity="0.06"/>
+    <path d="M250 115 Q240 70 250 35 Q260 70 250 115Z" transform="rotate(337.5, 250, 160)" fill="#000" fill-opacity="0.06"/>
+  </g>
+  <!-- Petal center lines -->
+  <g stroke-width="1" stroke-opacity="0.3">
+    <line x1="250" y1="115" x2="250" y2="45"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(22.5, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(45, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(67.5, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(90, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(112.5, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(135, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(157.5, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(180, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(202.5, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(225, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(247.5, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(270, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(292.5, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(315, 250, 160)"/>
+    <line x1="250" y1="115" x2="250" y2="45" transform="rotate(337.5, 250, 160)"/>
+  </g>
+  <!-- Small bud -->
+  <path d="M180 250 Q170 240 175 228 Q185 240 180 250Z" stroke-width="2"/>
+  <path d="M178 245 L170 248" stroke-width="1.5"/>
+</svg>

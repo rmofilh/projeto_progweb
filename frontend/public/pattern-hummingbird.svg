@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none" stroke="#000" stroke-width="2">
+  <title>Beija-Flor</title>
+  <!-- Hummingbird body -->
+  <path d="M250 300 Q270 270 280 240 Q290 210 285 180 Q280 155 270 140 Q260 125 250 120 Q240 125 230 140 Q220 155 215 180 Q210 210 220 240 Q230 270 250 300Z" stroke-width="3"/>
+  <!-- Head -->
+  <path d="M270 140 Q280 120 290 105 Q300 90 310 80 Q320 72 325 75 Q330 80 325 90 Q315 105 300 115" stroke-width="3"/>
+  <!-- Long thin beak -->
+  <path d="M325 78 Q350 65 380 55 Q395 50 400 52" stroke-width="2"/>
+  <path d="M325 82 Q345 73 370 65 Q385 60 390 62" stroke-width="1.5"/>
+  <!-- Eye -->
+  <circle cx="295" cy="108" r="4" fill="#000" fill-opacity="0.4"/>
+  <circle cx="295" cy="108" r="2" fill="#000" fill-opacity="0.6"/>
+  <!-- Wing -->
+  <path d="M250 180 Q220 160 190 150 Q160 145 140 155 Q120 168 115 185 Q112 200 120 210 Q130 218 145 215 Q160 210 180 200 Q200 190 230 185" stroke-width="3"/>
+  <!-- Wing inner lines -->
+  <path d="M230 185 Q200 175 175 172 Q155 170 140 178" stroke-width="1.5"/>
+  <path d="M220 195 Q195 188 175 188 Q160 190 150 198" stroke-width="1.5"/>
+  <!-- Tail feathers -->
+  <path d="M250 300 Q245 340 230 370 Q220 390 210 400" stroke-width="3"/>
+  <path d="M250 300 Q255 345 260 375 Q265 395 270 405" stroke-width="2.5"/>
+  <path d="M250 300 Q250 350 250 380 Q250 400 248 410" stroke-width="2.5"/>
+  <!-- Tail details -->
+  <path d="M225 360 L218 375 M255 365 L262 380" stroke-width="1.5"/>
+  <!-- Flowers (nectar source) -->
+  <g transform="translate(380,40)">
+    <!-- Flower stem -->
+    <path d="M20 80 Q15 60 20 40" stroke-width="2"/>
+    <!-- Trumpet flower 1 -->
+    <path d="M20 40 Q10 30 5 22 Q2 18 5 15 Q10 12 15 18 Q18 22 20 30" stroke-width="2"/>
+    <path d="M20 40 Q18 35 15 30" stroke-width="1"/>
+    <!-- Trumpet flower 2 -->
+    <path d="M15 55 Q5 48 0 42 Q-3 38 0 35 Q5 33 8 38 Q12 42 15 48" stroke-width="2"/>
+    <!-- Leaves -->
+    <path d="M25 70 Q35 60 38 50 Q30 55 25 70Z" fill="#000" fill-opacity="0.08"/>
+    <path d="M10 75 Q0 68 -2 60 Q5 65 10 75Z" fill="#000" fill-opacity="0.08"/>
+  </g>
+  <!-- Motion lines -->
+  <g stroke-width="1" stroke-opacity="0.3">
+    <path d="M100 230 Q90 235 80 232" />
+    <path d="M105 245 Q95 250 85 247" />
+    <path d="M110 260 Q100 265 90 262" />
+  </g>
+  <!-- Small sparkle near flowers -->
+  <path d="M400 25 L403 32 L410 35 L403 38 L400 45 L397 38 L390 35 L397 32Z" stroke-width="1.5" fill="#000" fill-opacity="0.1"/>
+</svg>

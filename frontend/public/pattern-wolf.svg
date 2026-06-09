@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none" stroke="#000" stroke-width="2.5">
+  <title>Lobo Solitário</title>
+  <!-- Background moon -->
+  <circle cx="320" cy="120" r="60" stroke-width="2.5"/>
+  <circle cx="340" cy="100" r="50" fill="#fff" stroke="none"/>
+  <circle cx="320" cy="120" r="60" stroke-width="2.5" fill="none"/>
+  <!-- Wolf profile facing left -->
+  <g transform="translate(30,20)">
+    <!-- Body -->
+    <path d="M300 320 Q280 280 260 250 Q240 220 220 200 Q200 180 180 170 Q160 160 140 165 Q120 170 110 180 Q100 190 95 210 Q90 230 90 260 Q88 290 90 320 Q92 350 100 380 Q110 400 120 410 L280 410 Q300 400 310 380 Q320 350 310 320Z" stroke-width="3"/>
+    <!-- Chest/fur detail -->
+    <path d="M180 170 Q170 190 160 220 Q150 250 140 280 Q135 300 130 320" stroke-width="2"/>
+    <!-- Head -->
+    <path d="M110 180 Q100 160 95 140 Q90 120 85 105 Q80 90 70 80 Q60 72 50 75 Q40 80 35 95 Q30 110 35 130 Q40 145 50 155 Q55 160 55 165" stroke-width="3"/>
+    <!-- Snout -->
+    <path d="M55 165 Q45 170 35 175 Q25 180 20 188 Q15 195 18 200 Q22 205 30 205 Q40 205 50 200 Q60 195 70 195" stroke-width="3"/>
+    <!-- Lower jaw -->
+    <path d="M30 205 Q35 215 50 218 Q65 220 80 215 Q90 210 95 210" stroke-width="2.5"/>
+    <!-- Ear 1 -->
+    <path d="M95 140 Q90 110 85 90 Q80 70 75 60 Q72 55 68 58 Q65 65 68 80 Q72 100 75 115" stroke-width="3"/>
+    <!-- Ear 2 -->
+    <path d="M85 130 Q75 95 60 75 Q55 65 55 70 Q55 80 60 95 Q65 110 70 125" stroke-width="2.5"/>
+    <!-- Eye -->
+    <ellipse cx="80" cy="150" rx="6" ry="4" fill="#000" fill-opacity="0.5"/>
+    <!-- Nose -->
+    <circle cx="22" cy="195" r="4" fill="#000" fill-opacity="0.4"/>
+    <!-- Fur texture on neck -->
+    <path d="M110 200 Q105 215 100 235 Q95 255 95 275" stroke-width="2"/>
+    <path d="M120 195 Q115 210 110 230" stroke-width="1.5"/>
+    <!-- Front legs -->
+    <path d="M130 320 Q125 350 120 380 Q115 400 112 410" stroke-width="3"/>
+    <path d="M150 310 Q148 340 145 370 Q142 390 140 410" stroke-width="3"/>
+    <!-- Paws -->
+    <path d="M108 410 Q100 415 105 420 Q110 425 115 420 Q118 415 112 410" stroke-width="2.5"/>
+    <path d="M136 410 Q130 415 133 420 Q138 425 143 420 Q145 415 140 410" stroke-width="2.5"/>
+    <!-- Tail -->
+    <path d="M310 320 Q340 300 360 270 Q380 240 390 210 Q395 195 388 185 Q380 180 370 190 Q355 205 340 230 Q320 260 305 290" stroke-width="3"/>
+    <!-- Tail fur tip -->
+    <path d="M388 185 Q395 175 390 168 Q382 165 375 175" stroke-width="2.5"/>
+    <!-- Ground line -->
+    <path d="M20 410 Q100 415 200 410 Q300 405 400 410 L480 410" stroke-width="2"/>
+    <!-- Small distant pine trees -->
+    <path d="M420 380 L425 350 L430 380" stroke-width="1.5"/>
+    <path d="M440 390 L445 365 L450 390" stroke-width="1.5"/>
+    <path d="M460 385 L464 360 L468 385" stroke-width="1.5"/>
+  </g>
+</svg>

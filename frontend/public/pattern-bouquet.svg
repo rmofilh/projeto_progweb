@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none" stroke="#000" stroke-width="2">
+  <title>Buquê de Primavera</title>
+  <!-- Stems -->
+  <path d="M250 450 Q240 300 200 180" stroke-width="3"/>
+  <path d="M250 450 Q260 320 310 160" stroke-width="3"/>
+  <path d="M250 450 Q250 350 250 200" stroke-width="3"/>
+  <!-- Leaves -->
+  <path d="M220 320 Q200 300 215 280 Q230 300 220 320Z" fill="#000" fill-opacity="0.1"/>
+  <path d="M280 290 Q300 270 290 250 Q270 270 280 290Z" fill="#000" fill-opacity="0.1"/>
+  <path d="M235 380 Q215 365 230 350 Q245 365 235 380Z" fill="#000" fill-opacity="0.1"/>
+  <!-- Flower 1 - center top -->
+  <circle cx="250" cy="160" r="35" stroke-width="3"/>
+  <circle cx="250" cy="160" r="20" stroke-width="2.5"/>
+  <path d="M250 125 L250 110 M250 195 L250 210 M215 160 L200 160 M285 160 L300 160" stroke-width="2.5"/>
+  <path d="M225 135 L215 125 M275 135 L285 125 M225 185 L215 195 M275 185 L285 195" stroke-width="2"/>
+  <circle cx="250" cy="160" r="8" fill="#000" fill-opacity="0.3"/>
+  <!-- Flower 2 - left -->
+  <circle cx="200" cy="200" r="28" stroke-width="3"/>
+  <circle cx="200" cy="200" r="15" stroke-width="2.5"/>
+  <path d="M200 172 L200 160 M200 228 L200 240 M172 200 L160 200 M228 200 L240 200" stroke-width="2"/>
+  <circle cx="200" cy="200" r="6" fill="#000" fill-opacity="0.3"/>
+  <!-- Flower 3 - right -->
+  <circle cx="310" cy="180" r="30" stroke-width="3"/>
+  <circle cx="310" cy="180" r="18" stroke-width="2.5"/>
+  <path d="M310 150 L310 135 M310 210 L310 225 M280 180 L265 180 M340 180 L355 180" stroke-width="2"/>
+  <circle cx="310" cy="180" r="7" fill="#000" fill-opacity="0.3"/>
+  <!-- Small buds -->
+  <circle cx="170" cy="240" r="10" stroke-width="2"/>
+  <circle cx="340" cy="220" r="8" stroke-width="2"/>
+  <!-- Ribbon/bow -->
+  <path d="M230 430 Q220 410 240 400 Q250 420 230 430Z" fill="#000" fill-opacity="0.15"/>
+  <path d="M270 430 Q280 410 260 400 Q250 420 270 430Z" fill="#000" fill-opacity="0.15"/>
+  <path d="M245 435 Q250 450 250 460 Q250 450 255 435" stroke-width="2.5"/>
+</svg>
