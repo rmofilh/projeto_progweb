@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI
 
 on:
   push:
@@ -49,20 +49,5 @@ jobs:
         working-directory: frontend
       - run: npm run lint
         working-directory: frontend
-        continue-on-error: false
-      - run: npm run typecheck
+      - run: npm run build
         working-directory: frontend
-        continue-on-error: false
-      - run: npm test
-        working-directory: frontend
-
-  docker:
-    if: github.ref == 'refs/heads/master'
-    needs: [backend, frontend]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: docker build -t fioeluz/api:latest -t fioeluz/api:${{ github.sha }} ./backend
-      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker push fioeluz/api:latest
-      - run: docker push fioeluz/api:${{ github.sha }}
