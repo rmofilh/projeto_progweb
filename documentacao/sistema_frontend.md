@@ -4,6 +4,7 @@
 
 O frontend do **Fio & Luz** é o ponto de contato da usuária com o sistema de apoio ao bordado manual. Trata-se de uma aplicação web progressiva (PWA) construída com Next.js 16 (App Router), TypeScript estrito e Tailwind CSS v4, seguindo uma arquitetura inspirada em Clean Architecture com camadas bem definidas.
 
+testeste
 A aplicação permite que a bordadeira navegue por um catálogo de riscos (patterns), favorite seus designs preferidos no "Baú Pessoal" (limite de 100), calibre a tela do dispositivo para escala física real e utilize a "Mesa de Luz Digital" para transferir o desenho diretamente para o tecido com o auxílio de um simulador de bastidor, dicas curatoriais de fios e pontos, e modo tela cheia com wake lock.
 
 ---
