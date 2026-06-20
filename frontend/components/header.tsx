@@ -5,6 +5,7 @@ import { Lightbulb } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { buttonVariants } from "@/components/ui/button";
 import { authCubit } from "@/src/application/auth/AuthCubit";
 
 export function Header() {
@@ -42,7 +43,7 @@ export function Header() {
           
           {authState.status === "authenticated" ? (
             <div className="flex items-center gap-4">
-              <span className="text-sm text-zinc-500">{authState.session?.user?.email || "mock@fioeluz.com"}</span>
+              <span className="text-sm text-zinc-500">{authState.session?.user?.email}</span>
               <button 
                 onClick={() => authCubit.logout()} 
                 className="text-lg font-medium text-charcoal hover:text-charcoal/70 transition-colors"
@@ -51,12 +52,12 @@ export function Header() {
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => authCubit.loginMock("mock-token")}
-              className="text-lg font-medium text-charcoal hover:text-charcoal/70 transition-colors"
+            <Link 
+              href="/login"
+              className={cn(buttonVariants({ variant: "default" }), "rounded-full bg-charcoal h-10 px-6")}
             >
-              Entrar (Mock)
-            </button>
+              Entrar
+            </Link>
           )}
         </nav>
       </div>

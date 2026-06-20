@@ -11,7 +11,6 @@ import { ScaleEngine } from '@/src/domain/value_objects/ScaleEngine';
 import { CalibrationOverlay } from '@/components/calibration-overlay';
 import { Pattern } from '@/src/domain/entities/Pattern';
 
-import { useCuratorialSuggestions } from '@/src/presentation/hooks/useCuratorialSuggestions';
 import { CheckCircle2, AlertTriangle, Circle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -24,7 +23,6 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [wakeLock, setWakeLock] = useState<any>(null);
   const [showCalibration, setShowCalibration] = useState(false);
-  const [opacity, setOpacity] = useState(1);
   const [isDesktop, setIsDesktop] = useState(false);
   const [hoopSize, setHoopSize] = useState<number | null>(null);
   
@@ -32,7 +30,6 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
   const thermalTimer = useRef<NodeJS.Timeout | null>(null);
   const { scale, saveCalibration, isCalibrated } = useScaleCalibration();
   
-  const { data: suggestions } = useCuratorialSuggestions(pattern.id);
 
   useEffect(() => {
     setIsDesktop(typeof window !== 'undefined' && !('ontouchstart' in window));
@@ -226,31 +223,6 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
               </ul>
             </div>
 
-            {suggestions && (
-              <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
-                <h3 className="font-bold mb-4 text-blue-900 flex items-center gap-2">
-                  <span className="text-xl">💡</span> Dicas Curatoriais
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-sm text-blue-800 mb-1">Fios Sugeridos</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {suggestions.threads.map(t => (
-                        <span key={t} className="px-2 py-1 bg-white border border-blue-200 text-blue-700 text-xs rounded-md">{t}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-sm text-blue-800 mb-1">Pontos Ideais</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {suggestions.stitches.map(s => (
-                        <span key={s} className="px-2 py-1 bg-white border border-blue-200 text-blue-700 text-xs rounded-md">{s}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
@@ -280,31 +252,12 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
           {/* iOS Fallback WakeLock (Invisível) */}
           <video autoPlay loop muted playsInline className="hidden pointer-events-none" src="data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAACg8IUBgQGFh6CWAQAAAAAAACz1BAABAAAArB2FAYKGAQAAP9uGgQOFgQEBAQABAQAAAQEQgQQBAQEAoICBgICAgIKAAICAAAAAAAAFkAAAFuIAAAABfB2GAQBvY29kZWMDVP+BAAAABO2DgwGAgKCRgYCgoI2CAgMAAACqjg4BAQEAwIEEAQEBAKCAgYCAgICAgICAgICAgICAgICAgICAgICAgICAgICAAICAgICAgICAhICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIKAAIAAAAAAAAAA" />
 
-          {/* Controle Flutuante de Opacidade */}
-          <div 
-            className="absolute top-8 left-1/2 -translate-x-1/2 w-64 p-4 bg-white/90 backdrop-blur-md rounded-3xl shadow-xl flex flex-col gap-3 z-[110]"
-            onClick={(e) => e.stopPropagation()}
-            onTouchStart={(e) => e.stopPropagation()}
-            onTouchMove={(e) => e.stopPropagation()}
-          >
-             <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 text-center">Opacidade do Desenho</span>
-             <input 
-               type="range" 
-               min="0.1" 
-               max="1" 
-               step="0.05" 
-               value={opacity} 
-               onChange={(e) => setOpacity(parseFloat(e.target.value))} 
-               className="w-full accent-charcoal" 
-             />
-          </div>
 
           <div className="relative w-full h-full flex items-center justify-center p-4">
             <div 
               style={{ 
                 width: `${ScaleEngine.cmToPixels(pattern.scaleCmReference, scale)}px`,
                 aspectRatio: '1/1',
-                opacity: opacity
               }}
               className="relative transition-opacity duration-200"
             >

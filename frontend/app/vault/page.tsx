@@ -1,10 +1,10 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { MockPatternRepository } from "@/src/infrastructure/repositories/MockPatternRepository";
+import { getPatternRepository } from "@/src/infrastructure/repositories";
 import { VaultClient } from "./VaultClient";
 
 export default async function VaultPage() {
-  const repo = new MockPatternRepository();
+  const repo = getPatternRepository();
   const collections = await repo.listCollections();
 
   return (

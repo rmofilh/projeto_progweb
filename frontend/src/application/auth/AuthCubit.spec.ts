@@ -45,7 +45,7 @@ describe('AuthCubit (Application Layer)', () => {
     vi.mocked(mockAuthRepo.authenticate).mockResolvedValue(mockSession);
 
     // Act
-    await authCubit.loginMock(mockToken);
+    await authCubit.authenticateWithToken(mockToken);
 
     // Assert
     expect(states).toHaveLength(3); // initial -> loading -> authenticated
@@ -73,7 +73,7 @@ describe('AuthCubit (Application Layer)', () => {
     vi.mocked(mockAuthRepo.authenticate).mockRejectedValue(new Error('Forced Error'));
 
     // Act
-    await authCubit.loginMock('invalid');
+    await authCubit.authenticateWithToken('invalid');
 
     // Assert
     expect(authCubit.getState().status).toBe('error');

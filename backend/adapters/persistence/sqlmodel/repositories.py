@@ -109,6 +109,22 @@ class SQLFavoriteRepository(IFavoriteRepository):
             self.session.add(orm)
             await self.session.flush()
 
+    async def get_by_user(self, user_id: UUID) -> List[DomainUserPattern]:
+        stmt = select(ORMUserPattern).where(ORMUserPattern.user_id == user_id)
+        result = await self.session.execute(stmt)
+        return [user_pattern_to_domain(up) for up in result.scalars().all()]
+
+    async def delete(self, user_id: UUID, pattern_id: UUID) -> None:
+        stmt = select(ORMUserPattern).where(
+            ORMUserPattern.user_id == user_id,
+            ORMUserPattern.pattern_id == pattern_id
+        )
+        result = await self.session.execute(stmt)
+        orm = result.scalar_one_or_none()
+        if orm:
+            await self.session.delete(orm)
+            await self.session.flush()
+
     async def exists_correlation_id(self, correlation_id: str) -> bool:
         orm = await self.session.get(ORMCorrelationId, correlation_id)
         return orm is not None

@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 
 import { Toaster } from "@/components/ui/sonner";
 import QueryProvider from "@/src/presentation/providers/QueryProvider";
+import { AuthInit } from "@/components/auth-init";
 
 export default function RootLayout({
   children,
@@ -35,6 +36,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-outfit">
         <QueryProvider>
+          <AuthInit />
           {children}
           <Toaster position="top-center" richColors />
         </QueryProvider>

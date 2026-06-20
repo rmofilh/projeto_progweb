@@ -9,7 +9,9 @@ from infrastructure.auth import JWTTokenProvider, SECRET_KEY, ALGORITHM
 from infrastructure.messaging import broker
 from use_cases.auth.login import RequestMagicLinkUseCase, VerifyMagicLinkUseCase
 from use_cases.favorites.add_favorite import AddFavoriteUseCase
-from use_cases.patterns.get_patterns import GetCatalogUseCase, GetCollectionsUseCase
+from use_cases.favorites.list_favorites import ListFavoritesUseCase
+from use_cases.favorites.remove_favorite import RemoveFavoriteUseCase
+from use_cases.patterns.get_patterns import GetCatalogUseCase, GetCollectionsUseCase, GetPatternByIdUseCase
 from domain.entities.user import User as DomainUser
 
 reusable_oauth2 = security.OAuth2PasswordBearer(tokenUrl="/v1/auth/verify")
@@ -55,11 +57,25 @@ def get_add_favorite_use_case(
 ):
     return AddFavoriteUseCase(favorite_repo, user_repo, messaging)
 
+def get_list_favorites_use_case(
+    favorite_repo = Depends(get_favorite_repo),
+    pattern_repo = Depends(get_pattern_repo)
+):
+    return ListFavoritesUseCase(favorite_repo, pattern_repo)
+
+def get_remove_favorite_use_case(
+    favorite_repo = Depends(get_favorite_repo)
+):
+    return RemoveFavoriteUseCase(favorite_repo)
+
 def get_catalog_use_case(repo = Depends(get_pattern_repo)):
     return GetCatalogUseCase(repo)
 
 def get_collections_use_case(repo = Depends(get_pattern_repo)):
     return GetCollectionsUseCase(repo)
+
+def get_pattern_by_id_use_case(repo = Depends(get_pattern_repo)):
+    return GetPatternByIdUseCase(repo)
 
 # Auth Dependency
 async def get_current_user(

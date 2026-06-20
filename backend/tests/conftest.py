@@ -13,7 +13,7 @@ from adapters.persistence.sqlmodel.models import SQLModel
 
 @pytest.fixture(scope="session")
 def engine():
-    url = os.getenv("DATABASE_URL", "postgresql+asyncpg://postgres:postgres@db:5432/fioeluz")
+    url = os.getenv("DATABASE_URL", "postgresql+asyncpg://fioeluz:fioeluz_pass@localhost:5432/fioeluz_test_db")
     engine = create_async_engine(url, echo=False, future=True, poolclass=NullPool)
     yield engine
 

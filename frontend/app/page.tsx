@@ -2,7 +2,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Catalog } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
-import { MockPatternRepository } from "@/src/infrastructure/repositories/MockPatternRepository";
+import { getPatternRepository } from "@/src/infrastructure/repositories";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HeroClient } from "@/components/hero-client";
@@ -26,7 +26,7 @@ function CatalogSkeleton() {
 }
 
 export default async function Home() {
-  const repo = new MockPatternRepository();
+  const repo = getPatternRepository();
   const patterns = await repo.listAll();
   const collections = await repo.listCollections();
 

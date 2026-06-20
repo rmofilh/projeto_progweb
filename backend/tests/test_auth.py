@@ -1,5 +1,5 @@
 import pytest
-from domain.models import User, MagicLink
+from adapters.persistence.sqlmodel.models import User, MagicLink
 from datetime import datetime, timedelta
 from sqlalchemy.future import select
 
@@ -10,7 +10,8 @@ async def test_request_magic_link_new_user(client, session):
     response = await client.post("/v1/auth/magic-link", json={"email": email})
     
     assert response.status_code == 200
-    assert "Check logs for simulation" in response.json()["message"]
+    assert response.json()["message"] == "Magic link generated"
+    assert "magic_link" in response.json()
     
     # Verifica se usuário foi criado
     statement = select(User).where(User.email == email)

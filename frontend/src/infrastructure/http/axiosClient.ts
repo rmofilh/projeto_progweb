@@ -1,16 +1,17 @@
 import axios from "axios";
+import { TOKEN_KEY } from "../config";
 
 export const axiosClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Interceptor de exemplo para Auth (pronto para integração futura)
 axiosClient.interceptors.request.use((config) => {
-  // Simulando uma busca futura do token (pode vir de cookies ou local storage)
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = typeof window !== "undefined"
+    ? (localStorage.getItem(TOKEN_KEY) || localStorage.getItem("token"))
+    : null;
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { MockPatternRepository } from "@/src/infrastructure/repositories/MockPatternRepository";
+import { getPatternRepository } from "@/src/infrastructure/repositories";
 import { ToggleFavoriteUseCase } from "@/src/application/useCases/ToggleFavoriteUseCase";
 import { toast } from "sonner";
 
@@ -8,7 +8,7 @@ export function useToggleFavorite() {
 
   return useMutation({
     mutationFn: async (patternId: string) => {
-      const repo = new MockPatternRepository();
+      const repo = getPatternRepository();
       const useCase = new ToggleFavoriteUseCase(repo);
       await useCase.execute(patternId);
     },

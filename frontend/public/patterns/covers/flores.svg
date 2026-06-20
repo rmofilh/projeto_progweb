@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="100" cy="100" r="12"/>
+  <path d="M100 88 Q85 60 100 70 Q115 60 100 88"/>
+  <path d="M100 112 Q85 140 100 130 Q115 140 100 112"/>
+  <path d="M88 100 Q60 85 70 100 Q60 115 88 100"/>
+  <path d="M112 100 Q140 85 130 100 Q140 115 112 100"/>
+  <path d="M91 91 Q75 75 82 82 Q75 75 91 91"/>
+  <path d="M109 91 Q125 75 118 82 Q125 75 109 91"/>
+  <path d="M91 109 Q75 125 82 118 Q75 125 91 109"/>
+  <path d="M109 109 Q125 125 118 118 Q125 125 109 109"/>
+  <line x1="100" y1="130" x2="100" y2="170" stroke-width="3"/>
+  <path d="M85 155 Q100 160 115 155"/>
+</svg>

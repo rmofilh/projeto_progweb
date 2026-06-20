@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { AuthSession } from "@/src/domain/entities/User";
 import { IAuthRepository } from "@/src/domain/repositories/IAuthRepository";
-import { MockAuthRepository } from "@/src/infrastructure/repositories/MockAuthRepository";
+import { getAuthRepository } from "@/src/infrastructure/repositories";
 
 type AuthState = 
   | { status: "initial" }
@@ -31,16 +31,22 @@ export class AuthCubit {
     return this.state;
   }
 
-  // Simulação de login com o Mock
-  async loginMock(token: string) {
+  async authenticateWithToken(token: string) {
     try {
       this.emit({ status: "loading" });
       const session = await this.authRepository.authenticate(token);
       
+      let claims = null;
+      try {
+        claims = session.token ? jwtDecode(session.token) : null;
+      } catch {
+        claims = null;
+      }
+
       this.emit({ 
         status: "authenticated", 
-        session: session, 
-        claims: { role: "admin" } 
+        session, 
+        claims 
       });
     } catch (error: any) {
       this.emit({ status: "error", message: error.message });
@@ -61,6 +67,16 @@ export class AuthCubit {
     await this.authRepository.logout();
     this.emit({ status: "unauthenticated" });
   }
+
+  async restoreSession() {
+    const session = await this.authRepository.getCurrentSession();
+    if (session) {
+      const claims = session.token ? jwtDecode(session.token) : null;
+      this.emit({ status: "authenticated", session, claims });
+    } else {
+      this.emit({ status: "unauthenticated" });
+    }
+  }
 }
 
-export const authCubit = new AuthCubit(new MockAuthRepository());
+export const authCubit = new AuthCubit(getAuthRepository());

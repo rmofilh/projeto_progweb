@@ -1,10 +1,10 @@
 import pytest
-from domain.models import Pattern, Collection
+from adapters.persistence.sqlmodel.models import Pattern, Collection
 import uuid
 
 @pytest.mark.asyncio
 async def test_list_patterns_empty(client):
-    response = await client.get("/v1/patterns")
+    response = await client.get("/v1/catalog/patterns")
     assert response.status_code == 200
     assert response.json() == []
 
@@ -29,12 +29,12 @@ async def test_list_patterns_with_data(client, session):
     await session.commit()
     
     # Execução: Listar todos
-    response = await client.get("/v1/patterns")
+    response = await client.get("/v1/catalog/patterns")
     assert response.status_code == 200
     assert len(response.json()) == 2
     
     # Execução: Filtrar por coleção
-    response = await client.get(f"/v1/patterns?collection_id={col.id}")
+    response = await client.get(f"/v1/catalog/patterns?collection_id={col.id}")
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 1
@@ -50,12 +50,12 @@ async def test_get_pattern_by_id(client, session):
     await session.commit()
     await session.refresh(pat)
     
-    response = await client.get(f"/v1/patterns/{pat.id}")
+    response = await client.get(f"/v1/catalog/patterns/{pat.id}")
     assert response.status_code == 200
     assert response.json()["title"] == "Special"
     
     # Not found
-    response = await client.get(f"/v1/patterns/{uuid.uuid4()}")
+    response = await client.get(f"/v1/catalog/patterns/{uuid.uuid4()}")
     assert response.status_code == 404
 
 @pytest.mark.asyncio
@@ -63,7 +63,7 @@ async def test_list_collections(client, session):
     session.add(Collection(title="Winter", cover_image_path="w.png"))
     await session.commit()
     
-    response = await client.get("/v1/collections")
+    response = await client.get("/v1/catalog/collections")
     assert response.status_code == 200
     assert len(response.json()) == 1
     assert response.json()[0]["title"] == "Winter"

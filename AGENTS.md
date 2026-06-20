@@ -74,3 +74,29 @@ docker compose up --build   # starts db, api, web
 ## Spec-driven workflow (openspec)
 
 This project uses OpenSpec. Changes should follow the propose → apply → archive cycle. Pipeline config in `openspec/config.yaml`; changes stored in `openspec/changes/`.
+
+## Deploy & Production
+
+### Environment variables
+
+| Variable | Where | Required | Example |
+|---|---|---|---|
+| `DATABASE_URL` | Render (API) | Yes | `postgresql+asyncpg://user:pass@neon.tech/db` |
+| `SECRET_KEY` | Render (API) | Yes | `openssl rand -hex 32` |
+| `CORS_ORIGINS` | Render (API) | Yes | `https://fioeluz.vercel.app` |
+| `NEXT_PUBLIC_API_URL` | Vercel (Frontend) | Yes | `https://fioeluz-api.onrender.com` |
+| `NEXT_PUBLIC_USE_MOCK_API` | Vercel (Frontend) | Yes | `false` |
+
+### Seed database (post-deploy)
+
+Tables are created automatically on API startup. Seed data must be executed manually once after deploy:
+
+```bash
+# Docker (local or self-hosted):
+docker compose exec api python seed_db.py
+
+# Render (production): connect via Render Shell or a one-off task:
+python seed_db.py
+```
+
+The seed script creates 101 patterns across 5 collections. Running it multiple times will duplicate data — run exactly once after the first deploy.

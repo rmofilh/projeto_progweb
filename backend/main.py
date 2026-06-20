@@ -1,8 +1,21 @@
+import os
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from infrastructure.database import create_db_and_tables
 from adapters.api.routes import auth, favorites, patterns
 
 app = FastAPI(title="Fio & Luz API (Clean Architecture)")
+
+origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def startup_event():

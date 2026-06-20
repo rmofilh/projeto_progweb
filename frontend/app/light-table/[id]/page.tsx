@@ -1,4 +1,4 @@
-import { MockPatternRepository } from "@/src/infrastructure/repositories/MockPatternRepository";
+import { getPatternRepository } from "@/src/infrastructure/repositories";
 import { LightTableEngine } from "@/components/light-table/engine";
 import { AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default async function LightTablePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const repo = new MockPatternRepository();
+  const repo = getPatternRepository();
   const pattern = await repo.findById(id);
 
   if (!pattern) {

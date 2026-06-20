@@ -25,11 +25,39 @@
 - [x] 3.4 Validar o frontend injetando temporariamente um `[ ] Button` do Shadcn na página raiz para checar a renderização (RSC vs Client limits).
 
 ## Fase 4: Implementação do Domínio Restrito & UI
-- [ ] 4.1 Implementar a página de Catálogo (Discovery) exigindo que seja um *Server Component* para injetar os dados vindo da API.
-- [ ] 4.2 Inserir na rota referida o tratamento exato de Skeleton fallback via Shadcn caso o fetch demore ou dê erro (Testes Manuais de Offline).
-- [ ] 4.3 Implementar o Módulo "Engine de Mesa de Luz" separando numa sub-pasta estrita utilizando o pragma `'use client'` ativando a Wake Lock API.
-- [ ] 4.4 Configurar cenários de Crash/Error Toast (500 do DB down e 422 param fail) acionando notificações Shadcn Toast no PWA Shell.
+- [x] 4.1 Implementar a página de Catálogo (Discovery) exigindo que seja um *Server Component* para injetar os dados vindo da API.
+- [x] 4.2 Inserir na rota referida o tratamento exato de Skeleton fallback via Shadcn caso o fetch demore ou dê erro (Testes Manuais de Offline).
+- [x] 4.3 Implementar o Módulo "Engine de Mesa de Luz" separando numa sub-pasta estrita utilizando o pragma `'use client'` ativando a Wake Lock API.
+- [x] 4.4 Configurar cenários de Crash/Error Toast (500 do DB down e 422 param fail) acionando notificações Shadcn Toast no PWA Shell.
 
-## Fase 5: Persistência Resiliente e PWA
+## Fase 5: Persistência Resiliente e PWA (Pendente)
 - [ ] 5.1 Implementar sistema IndexedDB local para refletir favoritos.
 - [ ] 5.2 Amarrar sistema de Background Sync (Service Worker) para interceptar os POST favorites que ocorrerem off-grid.
+
+## Fase A: Correção de Bugs de Integração (opencode)
+- [x] A1: Exportar TOKEN_KEY de ApiAuthRepository e importar no axiosClient.ts para o interceptor ler "fioeluz_token"
+- [x] A2: Em ApiAuthRepository.authenticate(), usar jwtDecode(data.access_token) para extrair sub (email) e salvar como { id, email } no USER_KEY do localStorage
+- [x] A3: Nenhuma mudança — toggleFavorite mantém getFavorites() + POST/DELETE
+
+## Fase B: Seeder + Validação
+- [x] B1: Popular banco com 101 patterns + 5 coleções via seed_db.py
+- [x] B2: Validar dados servidos pela API (GET /v1/catalog/patterns → 101, GET /v1/catalog/collections → 5)
+
+## Fase C: Integração Real (mock=false)
+- [x] C1: Configurar NEXT_PUBLIC_USE_MOCK_API=false no .env.local
+- [x] C2: Verificar frontend servindo dados reais da API (catálogo, coleções, mesa de luz)
+- [x] C3: Adicionar CORSMiddleware no backend para permitir requisições cross-origin
+
+## Fase D: E2E Manual (Playwright)
+- [x] D1: Navegação pelo catálogo com dados reais
+- [x] D2: Página de login com formulário de magic link
+- [x] D3: Fluxo de autenticação (solicitar link + verificar token)
+- [x] D4: Mesa de luz carregando pattern individual
+- [x] D5: Baú Pessoal (vault) com e sem autenticação
+
+## Fase E: Auditoria
+- [x] E1: Logs — sem erros ativos (apenas erro histórico do broker já corrigido)
+- [x] E2: Rede — CORS funcional, API responde em ~6ms
+- [x] E3: JWT — HS256, expira em 7 dias, sub=email
+- [x] E4: Banco — 101 patterns, 5 coleções, índices OK, trigger ativo
+- [x] E5: Vitest — excluir e2e/ para não conflitar com Playwright

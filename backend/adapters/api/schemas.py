@@ -19,7 +19,7 @@ class CollectionResponse(BaseModel):
 
 class PatternBase(BaseModel):
     title: str
-    scale_cm_reference: float
+    scale_cm_reference: float = Field(gt=0)
     difficulty_level: int = Field(ge=1, le=5)
 
 class PatternCreate(PatternBase):

@@ -6,6 +6,6 @@ async def test_root(client):
     assert response.status_code == 200
     assert response.json() == {
         "status": "ok", 
-        "message": "Fio & Luz API is operational",
+        "architecture": "Clean Architecture with strict DDD isolation",
         "docs": "/docs"
     }
