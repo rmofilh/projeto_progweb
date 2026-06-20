@@ -1,8 +1,9 @@
-import os
 import logging
+import os
 from datetime import datetime, timedelta
-from typing import Optional
+
 from jose import jwt
+
 from use_cases.ports.auth import ITokenProvider
 
 logger = logging.getLogger(__name__)
@@ -20,15 +21,17 @@ ALGORITHM = "HS256"
 JWT_EXPIRE_HOURS = int(os.getenv("JWT_EXPIRE_HOURS", "24"))
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * JWT_EXPIRE_HOURS
 
+
 class JWTTokenProvider(ITokenProvider):
-    def create_access_token(self, data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    def create_access_token(self, data: dict, expires_delta: timedelta | None = None) -> str:
         """Concrete JWT implementation for token providence."""
         to_encode = data.copy()
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
         else:
             expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        
+
         to_encode.update({"exp": expire})
+        assert SECRET_KEY is not None  # guaranteed by init logic
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt

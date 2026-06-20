@@ -12,15 +12,17 @@ from datetime import datetime
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SCRIPT_DIR)
 
-import sqlalchemy
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlmodel import SQLModel
-from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlalchemy.orm import sessionmaker
+import sqlalchemy  # noqa: E402 — sys.path.insert above required for direct execution
+from sqlalchemy import select  # noqa: E402
+from sqlalchemy.ext.asyncio import create_async_engine  # noqa: E402
+from sqlalchemy.orm import sessionmaker  # noqa: E402
+from sqlmodel import SQLModel  # noqa: E402
+from sqlmodel.ext.asyncio.session import AsyncSession  # noqa: E402
 
-from adapters.persistence.sqlmodel.models import (
+from adapters.persistence.sqlmodel.models import (  # noqa: E402
     Collection as ORMCollection,
+)
+from adapters.persistence.sqlmodel.models import (  # noqa: E402
     Pattern as ORMPattern,
 )
 
@@ -38,42 +40,42 @@ PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 PATTERNS_DIR = os.path.join(PROJECT_ROOT, "frontend", "public", "patterns")
 
 COLLECTIONS = [
-    {"slug": "xadrez",  "title": "Xadrez"},
+    {"slug": "xadrez", "title": "Xadrez"},
     {"slug": "animais", "title": "Animais"},
-    {"slug": "flores",  "title": "Flores"},
+    {"slug": "flores", "title": "Flores"},
     {"slug": "pessoas", "title": "Pessoas"},
 ]
 
 PATTERNS_META = [
     # (svg_filename_without_ext, title, collection_slug, scale_cm, difficulty)
     # Xadrez (scale: 12cm)
-    ("rei",     "Rei",    "xadrez",  12, 4),
-    ("rainha",  "Rainha", "xadrez",  12, 4),
-    ("bispo",   "Bispo",  "xadrez",  12, 5),
-    ("cavalo",  "Cavalo", "xadrez",  12, 5),
-    ("torre",   "Torre",  "xadrez",  12, 3),
-    ("peao",    "Peão",   "xadrez",  12, 4),
+    ("rei", "Rei", "xadrez", 12, 4),
+    ("rainha", "Rainha", "xadrez", 12, 4),
+    ("bispo", "Bispo", "xadrez", 12, 5),
+    ("cavalo", "Cavalo", "xadrez", 12, 5),
+    ("torre", "Torre", "xadrez", 12, 3),
+    ("peao", "Peão", "xadrez", 12, 4),
     # Animais (scale: 16cm)
-    ("camelo",   "Camelo",   "animais", 16, 1),
+    ("camelo", "Camelo", "animais", 16, 1),
     ("capivara", "Capivara", "animais", 16, 5),
-    ("cisne",    "Cisne",    "animais", 16, 5),
-    ("coelho",   "Coelho",   "animais", 16, 5),
-    ("coelho2",  "Coelho II","animais", 16, 5),
-    ("gorila",   "Gorila",   "animais", 16, 2),
-    ("leao",     "Leão",     "animais", 16, 2),
-    ("pato",     "Pato",     "animais", 16, 5),
-    ("pinguim",  "Pinguim",  "animais", 16, 1),
-    ("raposa",   "Raposa",   "animais", 16, 5),
+    ("cisne", "Cisne", "animais", 16, 5),
+    ("coelho", "Coelho", "animais", 16, 5),
+    ("coelho2", "Coelho II", "animais", 16, 5),
+    ("gorila", "Gorila", "animais", 16, 2),
+    ("leao", "Leão", "animais", 16, 2),
+    ("pato", "Pato", "animais", 16, 5),
+    ("pinguim", "Pinguim", "animais", 16, 1),
+    ("raposa", "Raposa", "animais", 16, 5),
     # Flores (scale: 14cm)
-    ("margarida",  "Margarida",       "flores", 14, 2),
-    ("margarida1", "Margarida II",    "flores", 14, 4),
-    ("buque",      "Buquê",           "flores", 14, 5),
-    ("melancia",   "Flor de Melancia","flores", 14, 3),
+    ("margarida", "Margarida", "flores", 14, 2),
+    ("margarida1", "Margarida II", "flores", 14, 4),
+    ("buque", "Buquê", "flores", 14, 5),
+    ("melancia", "Flor de Melancia", "flores", 14, 3),
     # Pessoas (scale: 18cm)
     ("cavaleiro", "Cavaleiro", "pessoas", 18, 5),
-    ("general",   "General",   "pessoas", 18, 5),
-    ("madame",    "Madame",    "pessoas", 18, 5),
-    ("mulher",    "Mulher",    "pessoas", 18, 2),
+    ("general", "General", "pessoas", 18, 5),
+    ("madame", "Madame", "pessoas", 18, 5),
+    ("mulher", "Mulher", "pessoas", 18, 2),
 ]
 
 
@@ -93,8 +95,7 @@ def compute_difficulty(svg_path: str) -> int:
         for c in "MLCQAZ":
             total_commands += d.count(c)
 
-    score = (len(paths) * 3 + total_commands + len(lines) * 2 +
-             len(circles) * 2 + len(ellipses) * 2)
+    score = len(paths) * 3 + total_commands + len(lines) * 2 + len(circles) * 2 + len(ellipses) * 2
 
     if score <= 15:
         return 1
@@ -109,8 +110,8 @@ def compute_difficulty(svg_path: str) -> int:
 
 
 async def seed():
-    SQL_ECHO = os.getenv("SQL_ECHO", "false").lower() == "true"
-    engine = create_async_engine(DATABASE_URL, echo=SQL_ECHO, future=True)
+    sql_echo = os.getenv("SQL_ECHO", "false").lower() == "true"
+    engine = create_async_engine(DATABASE_URL, echo=sql_echo, future=True)
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
 
@@ -199,9 +200,11 @@ async def seed():
         await session.commit()
 
         total = await session.scalar(select(sqlalchemy.func.count()).select_from(ORMPattern))
-        coll_total = await session.scalar(select(sqlalchemy.func.count()).select_from(ORMCollection))
+        coll_total = await session.scalar(
+            select(sqlalchemy.func.count()).select_from(ORMCollection)
+        )
 
-    print(f"\n=== Seed complete ===")
+    print("\n=== Seed complete ===")
     print(f"  Collections: {coll_total}")
     print(f"  Patterns created: {patterns_created}")
     print(f"  Patterns skipped (already exist): {patterns_skipped}")

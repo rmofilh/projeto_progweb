@@ -1,15 +1,17 @@
 from uuid import UUID
+
+from domain.entities.user_pattern import UserPattern
+from domain.exceptions.base import EntityNotFoundException, LimitReachedException
 from domain.repositories.interfaces import IFavoriteRepository, IUserRepository
 from use_cases.ports.messaging import IMessagingProtocol
-from domain.exceptions.base import LimitReachedException, EntityNotFoundException
-from domain.entities.user_pattern import UserPattern
+
 
 class AddFavoriteUseCase:
     def __init__(
-        self, 
+        self,
         favorite_repo: IFavoriteRepository,
         user_repo: IUserRepository,
-        messaging: IMessagingProtocol
+        messaging: IMessagingProtocol,
     ):
         self.favorite_repo = favorite_repo
         self.user_repo = user_repo
@@ -43,7 +45,7 @@ class AddFavoriteUseCase:
         # 5. Domain operation: Initial registration (EDA Outbox pattern)
         favorite = UserPattern(user_id=user_id, pattern_id=pattern_id, status="PROCESSING")
         await self.favorite_repo.add(favorite)
-        
+
         # 6. Persist correlation ID to prevent concurrent processing
         await self.favorite_repo.register_correlation_id(correlation_id)
 
@@ -51,7 +53,7 @@ class AddFavoriteUseCase:
         await self.messaging.publish(
             topic="favorites_queue",
             payload={"user_id": str(user_id), "pattern_id": str(pattern_id)},
-            correlation_id=correlation_id
+            correlation_id=correlation_id,
         )
 
         return {"status": "processing", "correlation_id": correlation_id}

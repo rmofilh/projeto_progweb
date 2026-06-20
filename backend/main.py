@@ -1,10 +1,11 @@
-import os
 import logging
+import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from infrastructure.database import create_db_and_tables
+
 from adapters.api.routes import auth, favorites, patterns
+from infrastructure.database import create_db_and_tables
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 
@@ -20,20 +21,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.on_event("startup")
 async def startup_event():
     # System initialization in infrastructure layer
     await create_db_and_tables()
+
 
 # Register Adapters (API Routes)
 app.include_router(auth.router)
 app.include_router(favorites.router)
 app.include_router(patterns.router)
 
+
 @app.get("/")
 async def root():
     return {
-        "status": "ok", 
+        "status": "ok",
         "architecture": "Clean Architecture with strict DDD isolation",
-        "docs": "/docs"
+        "docs": "/docs",
     }

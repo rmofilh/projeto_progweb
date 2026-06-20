@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import UUID, uuid4
-from typing import Optional
+
 
 @dataclass
 class Pattern:
@@ -11,7 +11,7 @@ class Pattern:
     scale_cm_reference: float
     difficulty_level: int
     id: UUID = field(default_factory=uuid4)
-    collection_id: Optional[UUID] = None
+    collection_id: UUID | None = None
     created_at: datetime = field(default_factory=datetime.utcnow)
 
     def __post_init__(self):

@@ -1,41 +1,45 @@
 import uuid
-from typing import List
-from fastapi import APIRouter, Depends, status, HTTPException
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
+
+from domain.entities.user import User as DomainUser
+from domain.exceptions.base import EntityNotFoundException, LimitReachedException
 from infrastructure.database import get_session
+
 from ..dependencies import (
-    get_add_favorite_use_case, get_list_favorites_use_case,
-    get_remove_favorite_use_case, get_current_user
+    get_add_favorite_use_case,
+    get_current_user,
+    get_list_favorites_use_case,
+    get_remove_favorite_use_case,
 )
 from ..schemas import PatternResponse
-from domain.entities.user import User as DomainUser
-from domain.exceptions.base import LimitReachedException, EntityNotFoundException
 
 router = APIRouter(prefix="/v1/favorites", tags=["Favorites"])
 
-@router.get("", response_model=List[PatternResponse])
+
+@router.get("", response_model=list[PatternResponse])
 async def list_favorites(
     current_user: DomainUser = Depends(get_current_user),
-    use_case = Depends(get_list_favorites_use_case)
+    use_case=Depends(get_list_favorites_use_case),
 ):
     return await use_case.execute(user_id=current_user.id)
+
 
 @router.post("/{pattern_id}", status_code=status.HTTP_202_ACCEPTED)
 async def favorite_pattern(
     pattern_id: uuid.UUID,
     current_user: DomainUser = Depends(get_current_user),
-    use_case = Depends(get_add_favorite_use_case),
-    session: AsyncSession = Depends(get_session)
+    use_case=Depends(get_add_favorite_use_case),
+    session: AsyncSession = Depends(get_session),
 ):
     correlation_id = str(uuid.uuid4())
-    
+
     try:
         result = await use_case.execute(
-            user_id=current_user.id, 
-            pattern_id=pattern_id, 
-            correlation_id=correlation_id
+            user_id=current_user.id, pattern_id=pattern_id, correlation_id=correlation_id
         )
-        
+
         # Transactional boundary: Commit the favorite registration (Outbox)
         await session.commit()
         return result
@@ -44,16 +48,19 @@ async def favorite_pattern(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except EntityNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
-    except Exception as e:
+    except Exception:
         await session.rollback()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An internal error occurred")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An internal error occurred"
+        )
+
 
 @router.delete("/{pattern_id}", status_code=status.HTTP_200_OK)
 async def remove_favorite(
     pattern_id: uuid.UUID,
     current_user: DomainUser = Depends(get_current_user),
-    use_case = Depends(get_remove_favorite_use_case),
-    session: AsyncSession = Depends(get_session)
+    use_case=Depends(get_remove_favorite_use_case),
+    session: AsyncSession = Depends(get_session),
 ):
     try:
         result = await use_case.execute(user_id=current_user.id, pattern_id=pattern_id)
@@ -61,6 +68,8 @@ async def remove_favorite(
         return result
     except EntityNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
-    except Exception as e:
+    except Exception:
         await session.rollback()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An internal error occurred")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An internal error occurred"
+        )

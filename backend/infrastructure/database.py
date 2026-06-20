@@ -1,11 +1,12 @@
-import os
 import asyncio
 import logging
+import os
+
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import sessionmaker
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import text
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,6 @@ SQL_ECHO = os.getenv("SQL_ECHO", "false").lower() == "true"
 engine = create_async_engine(DATABASE_URL, echo=SQL_ECHO, future=True)
 
 # Important: Import models here so they are registered with SQLModel.metadata
-from adapters.persistence.sqlmodel.models import SQLModel as PersistenceSQLModel  # noqa: E402
 
 CREATE_FUNCTION_SQL = """
 CREATE OR REPLACE FUNCTION check_user_favorites_limit()
@@ -39,17 +39,21 @@ FOR EACH ROW EXECUTE FUNCTION check_user_favorites_limit();
 ALEMBIC_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "alembic")
 BACKEND_DIR = os.path.dirname(os.path.dirname(__file__))
 
+
 def _run_alembic_upgrade():
-    from alembic.config import Config
     from alembic import command
+    from alembic.config import Config
+
     alembic_cfg = Config(os.path.join(BACKEND_DIR, "alembic.ini"))
     alembic_cfg.set_main_option("script_location", ALEMBIC_DIR)
     alembic_cfg.set_main_option("sqlalchemy.url", DATABASE_URL)
     command.upgrade(alembic_cfg, "head")
 
+
 async def run_alembic_migrations():
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, _run_alembic_upgrade)
+
 
 async def create_db_and_tables():
     if os.path.exists(ALEMBIC_DIR):
@@ -70,9 +74,8 @@ async def create_db_and_tables():
         await conn.execute(text(DROP_TRIGGER_SQL))
         await conn.execute(text(CREATE_TRIGGER_SQL))
 
+
 async def get_session():
-    async_session = sessionmaker(
-        engine, class_=AsyncSession, expire_on_commit=False
-    )
+    async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
     async with async_session() as session:
         yield session

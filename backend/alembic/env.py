@@ -2,15 +2,20 @@ import asyncio
 import os
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy import pool
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncConnection
+from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
 from sqlmodel import SQLModel
 
 # Load all ORM models so metadata is registered
 from adapters.persistence.sqlmodel.models import (  # noqa: F401
-    MagicLink, UserPattern, User, Collection, Pattern, CorrelationId,
+    Collection,
+    CorrelationId,
+    MagicLink,
+    Pattern,
+    User,
+    UserPattern,
 )
+from alembic import context
 
 config = context.config
 
@@ -37,15 +42,15 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: AsyncConnection) -> None:
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(connection=connection, target_metadata=target_metadata)  # type: ignore[arg-type]
     with context.begin_transaction():
         context.run_migrations()
 
 
 async def run_async_migrations() -> None:
-    connectable = create_async_engine(DATABASE_URL, poolclass=pool.NullPool)
+    connectable = create_async_engine(DATABASE_URL, poolclass=pool.NullPool)  # type: ignore[arg-type]
     async with connectable.connect() as connection:
-        await connection.run_sync(do_run_migrations)
+        await connection.run_sync(do_run_migrations)  # type: ignore[arg-type]
     await connectable.dispose()
 
 

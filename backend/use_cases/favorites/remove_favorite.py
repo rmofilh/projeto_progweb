@@ -1,6 +1,8 @@
 from uuid import UUID
-from domain.repositories.interfaces import IFavoriteRepository
+
 from domain.exceptions.base import EntityNotFoundException
+from domain.repositories.interfaces import IFavoriteRepository
+
 
 class RemoveFavoriteUseCase:
     def __init__(self, favorite_repo: IFavoriteRepository):

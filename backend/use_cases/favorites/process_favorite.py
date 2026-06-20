@@ -1,7 +1,8 @@
 import asyncio
 from uuid import UUID
+
 from domain.repositories.interfaces import IFavoriteRepository
-from domain.entities.user_pattern import UserPattern
+
 
 class ProcessFavoriteEventUseCase:
     def __init__(self, favorite_repo: IFavoriteRepository):
@@ -25,7 +26,7 @@ class ProcessFavoriteEventUseCase:
 
         # Invoke Rich Domain behavior
         favorite.mark_as_done()
-        
+
         # Persist updated state
         await self.favorite_repo.update(favorite)
         return True

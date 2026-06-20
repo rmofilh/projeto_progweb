@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import UUID
 
+
 @dataclass
 class UserPattern:
     user_id: UUID
@@ -13,7 +14,7 @@ class UserPattern:
     def mark_as_done(self):
         """Rich behavior: Transition to DONE state."""
         if self.status == "FAILED":
-            # Example invariant: cannot recover from failed automatically without re-processing logic
+            # Example invariant: cannot recover from failed without re-processing logic
             pass
         self.status = "DONE"
 
