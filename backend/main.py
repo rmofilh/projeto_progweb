@@ -1,9 +1,12 @@
 import os
+import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from infrastructure.database import create_db_and_tables
 from adapters.api.routes import auth, favorites, patterns
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 
 app = FastAPI(title="Fio & Luz API (Clean Architecture)")
 

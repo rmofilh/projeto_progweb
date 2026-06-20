@@ -1,8 +1,20 @@
 import axios from "axios";
 import { TOKEN_KEY } from "../config";
 
+function getBaseURL(): string {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  if (!url && typeof window !== "undefined") {
+    console.warn(
+      "NEXT_PUBLIC_API_URL is not configured. " +
+      "Set it in .env.local or Vercel environment variables."
+    );
+    return "";
+  }
+  return url || "";
+}
+
 export const axiosClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
+  baseURL: getBaseURL(),
   headers: {
     "Content-Type": "application/json",
   },

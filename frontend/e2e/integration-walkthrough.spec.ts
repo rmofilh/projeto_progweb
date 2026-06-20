@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { execSync } from 'child_process'
 
 const BASE = 'http://localhost:3000'
 const API = 'http://localhost:8000'
@@ -78,7 +79,6 @@ test.describe('FASE D — E2E Walkthrough', () => {
     })
 
     // Poll the DB for the token (use the psql command via API — hacky but works)
-    const { execSync } = require('child_process')
     const result = execSync(
       `docker compose exec -T db psql -U fioeluz -d fioeluz_db -t -A -c "SELECT token FROM magic_links WHERE used = false ORDER BY expires_at DESC LIMIT 1;"`,
       { encoding: 'utf-8', timeout: 10000 }
@@ -148,8 +148,8 @@ test.describe('FASE D — E2E Walkthrough', () => {
     const collRes = await fetch(`${API}/v1/catalog/collections`)
     const collections = await collRes.json()
     console.log(`[D7] Collections: ${collections.length}`)
-    const seededCollections = collections.filter((c: any) =>
-      ['Natureza', 'Animais', 'Geométrico', 'Floral', 'Abstrato'].includes(c.title)
+    const seededCollections = collections.filter((c: Record<string, unknown>) =>
+      ['Natureza', 'Animais', 'Geométrico', 'Floral', 'Abstrato'].includes(c.title as string)
     )
     expect(seededCollections.length).toBe(5)
 
@@ -174,7 +174,6 @@ test.describe('FASE D — E2E Walkthrough', () => {
     const pattern = patterns[0]
 
     // Get a valid token
-    const { execSync } = require('child_process')
     const token = execSync(
       `docker compose exec -T db psql -U fioeluz -d fioeluz_db -t -A -c "SELECT token FROM magic_links WHERE used = false ORDER BY expires_at DESC LIMIT 1;"`,
       { encoding: 'utf-8', timeout: 10000 }

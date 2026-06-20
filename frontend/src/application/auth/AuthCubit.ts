@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import { AuthSession } from "@/src/domain/entities/User";
 import { IAuthRepository } from "@/src/domain/repositories/IAuthRepository";
 import { getAuthRepository } from "@/src/infrastructure/repositories";
@@ -6,7 +6,7 @@ import { getAuthRepository } from "@/src/infrastructure/repositories";
 type AuthState = 
   | { status: "initial" }
   | { status: "loading" }
-  | { status: "authenticated"; session: AuthSession; claims: any }
+  | { status: "authenticated"; session: AuthSession; claims: JwtPayload | null }
   | { status: "unauthenticated" }
   | { status: "error"; message: string };
 
@@ -48,8 +48,8 @@ export class AuthCubit {
         session, 
         claims 
       });
-    } catch (error: any) {
-      this.emit({ status: "error", message: error.message });
+    } catch (error: unknown) {
+      this.emit({ status: "error", message: error instanceof Error ? error.message : String(error) });
     }
   }
 
@@ -58,8 +58,8 @@ export class AuthCubit {
       this.emit({ status: "loading" });
       await this.authRepository.requestMagicLink(email);
       this.emit({ status: "unauthenticated" });
-    } catch (error: any) {
-      this.emit({ status: "error", message: error.message });
+    } catch (error: unknown) {
+      this.emit({ status: "error", message: error instanceof Error ? error.message : String(error) });
     }
   }
 

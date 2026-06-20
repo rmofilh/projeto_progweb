@@ -15,9 +15,9 @@ export function useToggleFavorite() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["favorites"] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast.error("Erro ao favoritar", {
-        description: error.message,
+        description: error instanceof Error ? error.message : String(error),
       });
     }
   });

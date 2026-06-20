@@ -1,7 +1,6 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Catalog } from "@/components/catalog";
-import { Button } from "@/components/ui/button";
 import { getPatternRepository } from "@/src/infrastructure/repositories";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";

@@ -1,22 +1,19 @@
 import { Pattern, DifficultyLevel } from "../../domain/entities/Pattern";
 
 export class PatternMapper {
-  /**
-   * Converte o JSON bruto da API para a Entidade de Domínio Pattern.
-   */
-  static toDomain(raw: any): Pattern {
+  static toDomain(raw: Record<string, unknown>): Pattern {
     return {
-      id: raw.id,
-      title: raw.title,
-      imagePath: raw.image_path,
-      thumbnailPath: raw.thumbnail_path,
+      id: String(raw.id),
+      title: String(raw.title),
+      imagePath: raw.image_path as string,
+      thumbnailPath: raw.thumbnail_path as string,
       scaleCmReference: Number(raw.scale_cm_reference),
       difficulty: raw.difficulty_level as DifficultyLevel,
-      collectionId: raw.collection_id,
+      collectionId: raw.collection_id != null ? String(raw.collection_id) : undefined,
     };
   }
 
-  static toDomainList(rawList: any[]): Pattern[] {
+  static toDomainList(rawList: Record<string, unknown>[]): Pattern[] {
     return rawList.map(this.toDomain);
   }
 }

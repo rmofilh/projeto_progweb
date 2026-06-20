@@ -2,6 +2,12 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AuthCubit } from './AuthCubit';
 import { IAuthRepository } from '@/src/domain/repositories/IAuthRepository';
 
+interface StateSnapshot {
+  status: string;
+  session?: { user: { id: string; email: string }; token: string };
+  message?: string;
+}
+
 describe('AuthCubit (Application Layer)', () => {
   let authCubit: AuthCubit;
   let mockAuthRepo: IAuthRepository;
@@ -36,8 +42,8 @@ describe('AuthCubit (Application Layer)', () => {
 
   it('should emit loading and then authenticated states on successful login', async () => {
     // Arrange
-    const states: any[] = [];
-    authCubit.subscribe(state => states.push(state));
+    const states: StateSnapshot[] = [];
+    authCubit.subscribe(state => states.push(state as StateSnapshot));
     const mockToken = 'mock-jwt-token';
     const mockSession = { user: { id: 'u1', email: 'test@example.com' }, token: mockToken };
     
@@ -51,7 +57,7 @@ describe('AuthCubit (Application Layer)', () => {
     expect(states).toHaveLength(3); // initial -> loading -> authenticated
     expect(states[1].status).toBe('loading');
     expect(states[2].status).toBe('authenticated');
-    expect((states[2] as any).session.token).toBe(mockToken);
+    expect(states[2].session!.token).toBe(mockToken);
     expect(mockAuthRepo.authenticate).toHaveBeenCalledWith(mockToken);
   });
 
@@ -66,8 +72,8 @@ describe('AuthCubit (Application Layer)', () => {
 
   it('should emit error state if login fails', async () => {
     // Arrange
-    const states: any[] = [];
-    authCubit.subscribe(state => states.push(state));
+    const states: StateSnapshot[] = [];
+    authCubit.subscribe(state => states.push(state as StateSnapshot));
     
     // Configura o mock do repositório para simular um erro na autenticação
     vi.mocked(mockAuthRepo.authenticate).mockRejectedValue(new Error('Forced Error'));
@@ -76,15 +82,14 @@ describe('AuthCubit (Application Layer)', () => {
     await authCubit.authenticateWithToken('invalid');
 
     // Assert
-    expect(authCubit.getState().status).toBe('error');
-    if (authCubit.getState().status === 'error') {
-      expect((authCubit.getState() as any).message).toBe('Forced Error');
-    }
+    const state = authCubit.getState() as StateSnapshot;
+    expect(state.status).toBe('error');
+    expect(state.message).toBe('Forced Error');
   });
 
   it('should call repository on requestMagicLink and emit unauthenticated on success', async () => {
-    const states: any[] = [];
-    authCubit.subscribe(state => states.push(state));
+    const states: StateSnapshot[] = [];
+    authCubit.subscribe(state => states.push(state as StateSnapshot));
     await authCubit.requestMagicLink('test@example.com');
     expect(mockAuthRepo.requestMagicLink).toHaveBeenCalledWith('test@example.com');
     // initial -> loading -> unauthenticated
@@ -94,9 +99,8 @@ describe('AuthCubit (Application Layer)', () => {
   it('should emit error if requestMagicLink fails', async () => {
     vi.mocked(mockAuthRepo.requestMagicLink).mockRejectedValue(new Error('Magic Link Error'));
     await authCubit.requestMagicLink('test@example.com');
-    expect(authCubit.getState().status).toBe('error');
-    if (authCubit.getState().status === 'error') {
-      expect((authCubit.getState() as any).message).toBe('Magic Link Error');
-    }
+    const state = authCubit.getState() as StateSnapshot;
+    expect(state.status).toBe('error');
+    expect(state.message).toBe('Magic Link Error');
   });
 });

@@ -45,35 +45,35 @@ COLLECTIONS = [
 ]
 
 PATTERNS_META = [
-    # (svg_filename_without_ext, title, collection_slug, scale_cm)
+    # (svg_filename_without_ext, title, collection_slug, scale_cm, difficulty)
     # Xadrez (scale: 12cm)
-    ("rei",     "Rei",    "xadrez",  12),
-    ("rainha",  "Rainha", "xadrez",  12),
-    ("bispo",   "Bispo",  "xadrez",  12),
-    ("cavalo",  "Cavalo", "xadrez",  12),
-    ("torre",   "Torre",  "xadrez",  12),
-    ("peao",    "Peão",   "xadrez",  12),
+    ("rei",     "Rei",    "xadrez",  12, 4),
+    ("rainha",  "Rainha", "xadrez",  12, 4),
+    ("bispo",   "Bispo",  "xadrez",  12, 5),
+    ("cavalo",  "Cavalo", "xadrez",  12, 5),
+    ("torre",   "Torre",  "xadrez",  12, 3),
+    ("peao",    "Peão",   "xadrez",  12, 4),
     # Animais (scale: 16cm)
-    ("camelo",   "Camelo",   "animais", 16),
-    ("capivara", "Capivara", "animais", 16),
-    ("cisne",    "Cisne",    "animais", 16),
-    ("coelho",   "Coelho",   "animais", 16),
-    ("coelho2",  "Coelho II","animais", 16),
-    ("gorila",   "Gorila",   "animais", 16),
-    ("leao",     "Leão",     "animais", 16),
-    ("pato",     "Pato",     "animais", 16),
-    ("pinguim",  "Pinguim",  "animais", 16),
-    ("raposa",   "Raposa",   "animais", 16),
+    ("camelo",   "Camelo",   "animais", 16, 1),
+    ("capivara", "Capivara", "animais", 16, 5),
+    ("cisne",    "Cisne",    "animais", 16, 5),
+    ("coelho",   "Coelho",   "animais", 16, 5),
+    ("coelho2",  "Coelho II","animais", 16, 5),
+    ("gorila",   "Gorila",   "animais", 16, 2),
+    ("leao",     "Leão",     "animais", 16, 2),
+    ("pato",     "Pato",     "animais", 16, 5),
+    ("pinguim",  "Pinguim",  "animais", 16, 1),
+    ("raposa",   "Raposa",   "animais", 16, 5),
     # Flores (scale: 14cm)
-    ("margarida",  "Margarida",       "flores", 14),
-    ("margarida1", "Margarida II",    "flores", 14),
-    ("buque",      "Buquê",           "flores", 14),
-    ("melancia",   "Flor de Melancia","flores", 14),
+    ("margarida",  "Margarida",       "flores", 14, 2),
+    ("margarida1", "Margarida II",    "flores", 14, 4),
+    ("buque",      "Buquê",           "flores", 14, 5),
+    ("melancia",   "Flor de Melancia","flores", 14, 3),
     # Pessoas (scale: 18cm)
-    ("cavaleiro", "Cavaleiro", "pessoas", 18),
-    ("general",   "General",   "pessoas", 18),
-    ("madame",    "Madame",    "pessoas", 18),
-    ("mulher",    "Mulher",    "pessoas", 18),
+    ("cavaleiro", "Cavaleiro", "pessoas", 18, 5),
+    ("general",   "General",   "pessoas", 18, 5),
+    ("madame",    "Madame",    "pessoas", 18, 5),
+    ("mulher",    "Mulher",    "pessoas", 18, 2),
 ]
 
 
@@ -109,7 +109,8 @@ def compute_difficulty(svg_path: str) -> int:
 
 
 async def seed():
-    engine = create_async_engine(DATABASE_URL, echo=True, future=True)
+    SQL_ECHO = os.getenv("SQL_ECHO", "false").lower() == "true"
+    engine = create_async_engine(DATABASE_URL, echo=SQL_ECHO, future=True)
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
 
@@ -151,7 +152,13 @@ async def seed():
         patterns_created = 0
         patterns_skipped = 0
 
-        for (slug, title, coll_slug, scale_cm) in PATTERNS_META:
+        for meta in PATTERNS_META:
+            # Support both 4-tuple (legacy) and 5-tuple (with difficulty)
+            if len(meta) == 5:
+                slug, title, coll_slug, scale_cm, difficulty = meta
+            else:
+                slug, title, coll_slug, scale_cm = meta
+                difficulty = None
             pat_id = uuid.uuid5(uuid.NAMESPACE_DNS, f"static-pattern-{slug}")
             existing = await session.get(ORMPattern, pat_id)
             if existing:
@@ -169,7 +176,12 @@ async def seed():
             if os.path.exists(svg_src):
                 shutil.copy2(svg_src, svg_dst)
 
-            difficulty = compute_difficulty(svg_dst if os.path.exists(svg_dst) else svg_src)
+            if difficulty is None:
+                svg_path = svg_dst if os.path.exists(svg_dst) else svg_src
+                if os.path.exists(svg_path):
+                    difficulty = compute_difficulty(svg_path)
+                else:
+                    difficulty = 3
 
             pat = ORMPattern(
                 id=pat_id,

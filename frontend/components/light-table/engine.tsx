@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Maximize2, X, Ruler } from 'lucide-react';
+import { Maximize2, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useScaleCalibration } from '@/src/presentation/hooks/useScaleCalibration';
 import { ScaleEngine } from '@/src/domain/value_objects/ScaleEngine';
@@ -21,29 +21,24 @@ interface LightTableEngineProps {
 export function LightTableEngine({ pattern }: LightTableEngineProps) {
   const router = useRouter();
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [wakeLock, setWakeLock] = useState<any>(null);
+  const [wakeLock, setWakeLock] = useState<WakeLockSentinel | null>(null);
   const [showCalibration, setShowCalibration] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop] = useState(() => typeof window !== 'undefined' && !('ontouchstart' in window));
   const [hoopSize, setHoopSize] = useState<number | null>(null);
   
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const thermalTimer = useRef<NodeJS.Timeout | null>(null);
   const { scale, saveCalibration, isCalibrated } = useScaleCalibration();
-  
-
-  useEffect(() => {
-    setIsDesktop(typeof window !== 'undefined' && !('ontouchstart' in window));
-  }, []);
 
   // Wake Lock Logic
   const requestWakeLock = async () => {
     if ('wakeLock' in navigator) {
       try {
-        const lock = await (navigator as any).wakeLock.request('screen');
+        const lock = await navigator.wakeLock.request('screen');
         setWakeLock(lock);
         console.log('Wake Lock active');
-      } catch (err: any) {
-        console.error(`${err.name}, ${err.message}`);
+      } catch (err: unknown) {
+        console.error(err instanceof Error ? `${err.name}, ${err.message}` : 'Wake Lock error');
       }
     }
   };
@@ -114,7 +109,7 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
     }
   };
 
-  const preventGestures = (e: any) => {
+  const preventGestures = (e: React.TouchEvent | React.WheelEvent) => {
     if (!isDesktop) e.preventDefault();
   };
 
@@ -246,7 +241,7 @@ export function LightTableEngine({ pattern }: LightTableEngineProps) {
           onTouchMove={preventGestures}
           onWheel={preventGestures}
           onClick={isDesktop ? exitFullscreen : undefined}
-          // @ts-ignore - For gesturechange in Safari
+          // @ts-expect-error - Safari-specific gesture event
           onGestureChange={preventGestures} 
         >
           {/* iOS Fallback WakeLock (Invisível) */}

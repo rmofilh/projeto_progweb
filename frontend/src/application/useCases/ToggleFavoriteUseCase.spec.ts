@@ -9,6 +9,8 @@ describe('ToggleFavoriteUseCase (Application Layer)', () => {
     const mockRepo: IPatternRepository = {
       listAll: vi.fn(),
       findById: vi.fn(),
+      listCollections: vi.fn(),
+      listByCollection: vi.fn(),
       getFavorites: vi.fn().mockResolvedValue([]),
       toggleFavorite: vi.fn().mockResolvedValue(undefined),
     };
@@ -27,6 +29,8 @@ describe('ToggleFavoriteUseCase (Application Layer)', () => {
     const mockRepo: IPatternRepository = {
       listAll: vi.fn(),
       findById: vi.fn(),
+      listCollections: vi.fn(),
+      listByCollection: vi.fn(),
       getFavorites: vi.fn().mockResolvedValue([]),
       toggleFavorite: vi.fn(),
     };
@@ -43,6 +47,8 @@ describe('ToggleFavoriteUseCase (Application Layer)', () => {
     const mockRepo: IPatternRepository = {
       listAll: vi.fn(),
       findById: vi.fn(),
+      listCollections: vi.fn(),
+      listByCollection: vi.fn(),
       getFavorites: vi.fn().mockResolvedValue(mockFavorites),
       toggleFavorite: vi.fn(),
     };
@@ -61,6 +67,8 @@ describe('ToggleFavoriteUseCase (Application Layer)', () => {
       findById: vi.fn(),
       getFavorites: vi.fn().mockResolvedValue(mockFavorites),
       toggleFavorite: vi.fn().mockResolvedValue(undefined),
+      listCollections: vi.fn(),
+      listByCollection: vi.fn(),
     };
     const useCase = new ToggleFavoriteUseCase(mockRepo);
 

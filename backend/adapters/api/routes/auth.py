@@ -1,10 +1,15 @@
 import os
+import logging
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 from infrastructure.database import get_session
 from ..schemas import AuthRequest, TokenResponse
 from ..dependencies import get_request_magic_link_use_case, get_verify_magic_link_use_case
+
+logger = logging.getLogger(__name__)
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
 router = APIRouter(prefix="/v1/auth", tags=["Authentication"])
 
@@ -18,11 +23,11 @@ async def request_magic_link(
     # Transactional boundary: API layer commits the result of the entire use case
     await session.commit()
 
-    magic_link = f"http://localhost:3000/login?token={token}"
-    print(f"\n🚀 [MAGIC LINK] {magic_link}\n")
+    magic_link = f"{FRONTEND_URL}/login?token={token}"
+    logger.info("Magic link generated: %s", magic_link)
 
     result = {"message": "Magic link generated"}
-    if os.getenv("ENVIRONMENT", "development") == "development":
+    if ENVIRONMENT == "development":
         result["magic_link"] = magic_link
     return result
 

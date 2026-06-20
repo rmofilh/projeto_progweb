@@ -1,9 +1,12 @@
 import asyncio
 import uuid
+import logging
 from infrastructure.database import engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 from adapters.persistence.sqlmodel.repositories import SQLFavoriteRepository
 from use_cases.favorites.process_favorite import ProcessFavoriteEventUseCase
+
+logger = logging.getLogger(__name__)
 
 async def process_favorite_event(envelope: dict):
     """
@@ -24,13 +27,13 @@ async def process_favorite_event(envelope: dict):
             if success:
                 # Transactional boundary: Commit the background processing results
                 await session.commit()
-                print(f"[{correlation_id}] Successfully processed {user_id}:{pattern_id}")
+                logger.info("[%s] Successfully processed %s:%s", correlation_id, user_id, pattern_id)
         except Exception as e:
             await session.rollback()
-            print(f"[{correlation_id}] Failed to process event: {e}")
+            logger.error("[%s] Failed to process event: %s", correlation_id, e)
 
 async def worker_loop():
-    print("Worker consuming queues...")
+    logger.info("Worker consuming queues...")
     while True:
         await asyncio.sleep(60)
 

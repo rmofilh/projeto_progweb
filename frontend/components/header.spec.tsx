@@ -2,11 +2,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const { mockAuthCubit, mockAuthState } = vi.hoisted(() => {
-  const state = { status: 'initial' };
+  const state: { status: string; session?: { user: { id: string; email: string }; token: string } } = { status: 'initial' };
   return {
     mockAuthCubit: {
       getState: vi.fn(() => state),
-      subscribe: vi.fn((listener: (s: object) => void) => {
+      subscribe: vi.fn((listener: (s: { status: string; session?: { user: { id: string; email: string }; token: string } }) => void) => {
         listener(state);
         return vi.fn();
       }),

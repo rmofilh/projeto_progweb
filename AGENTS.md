@@ -19,11 +19,13 @@ uvicorn main:app --reload          # dev server (port 8000)
 pytest                             # run all tests (requires PostgreSQL)
 pytest tests/test_foo.py -v        # single test file
 pytest --cov -vv                   # with coverage
+ruff check .                       # lint
+mypy . --exclude .venv/            # typecheck
 ```
 
-### Testing
+### Testing & Quality
 
-- `pytest.ini` sets `asyncio_mode = auto`, `pythonpath = .`
+- Config in `pyproject.toml` (pytest, ruff, mypy).
 - Tests require a running PostgreSQL (use `docker compose up db` or set `DATABASE_URL`).
 - `conftest.py` truncates tables (`TRUNCATE ... CASCADE`) before each test.
 - Test client uses `httpx.AsyncClient` with DI override of `get_session`.
@@ -46,6 +48,7 @@ npm run lint            # ESLint
 npm test                # Vitest (unit/integration)
 npm run test:coverage   # Vitest with coverage (threshold: 70%)
 npm run test:e2e        # Playwright (no e2e tests written yet)
+npm run typecheck       # tsc --noEmit
 ```
 
 ### Testing (Vitest)
@@ -61,7 +64,7 @@ docker compose up --build   # starts db, api, web
 ```
 
 - `db`: PostgreSQL 15 Alpine (port 5432)
-- `api`: FastAPI (port 8000), hot-reloads via volume mount
+- `api`: FastAPI (port 8000), multi-stage Docker image (no volume mount — use `uvicorn main:app --reload` for local dev)
 - `web`: Next.js (port 3000), static build (no volume mount for dev)
 - Default creds: `fioeluz` / `fioeluz_pass` / `fioeluz_db`
 
@@ -83,7 +86,11 @@ This project uses OpenSpec. Changes should follow the propose → apply → arch
 |---|---|---|---|
 | `DATABASE_URL` | Render (API) | Yes | `postgresql+asyncpg://user:pass@neon.tech/db` |
 | `SECRET_KEY` | Render (API) | Yes | `openssl rand -hex 32` |
-| `CORS_ORIGINS` | Render (API) | Yes | `https://fioeluz.vercel.app` |
+| `CORS_ORIGINS` | Render (API) | Yes | `https://fio-e-luz.vercel.app` |
+| `FRONTEND_URL` | Render (API) | Yes | `https://fio-e-luz.vercel.app` |
+| `ENVIRONMENT` | Render (API) | Yes | `production` |
+| `JWT_EXPIRE_HOURS` | Render (API) | No | `24` |
+| `SQL_ECHO` | Render (API) | No | `false` |
 | `NEXT_PUBLIC_API_URL` | Vercel (Frontend) | Yes | `https://fioeluz-api.onrender.com` |
 | `NEXT_PUBLIC_USE_MOCK_API` | Vercel (Frontend) | Yes | `false` |
 
