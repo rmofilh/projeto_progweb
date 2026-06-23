@@ -142,16 +142,16 @@ test.describe('FASE D — E2E Walkthrough', () => {
     const catalogRes = await fetch(`${API}/v1/catalog/patterns`)
     const catalog = await catalogRes.json()
     console.log(`[D7] Catalog: ${catalog.length} patterns`)
-    expect(catalog.length).toBe(101)
+    expect(catalog.length).toBe(24)
 
     // Collections
     const collRes = await fetch(`${API}/v1/catalog/collections`)
     const collections = await collRes.json()
     console.log(`[D7] Collections: ${collections.length}`)
     const seededCollections = collections.filter((c: Record<string, unknown>) =>
-      ['Natureza', 'Animais', 'Geométrico', 'Floral', 'Abstrato'].includes(c.title as string)
+      ['Xadrez', 'Animais', 'Flores', 'Pessoas'].includes(c.title as string)
     )
-    expect(seededCollections.length).toBe(5)
+    expect(seededCollections.length).toBe(4)
 
     // Pattern by ID
     if (catalog.length > 0) {

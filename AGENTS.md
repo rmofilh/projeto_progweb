@@ -25,7 +25,7 @@ mypy . --exclude .venv/            # typecheck
 
 ### Testing & Quality
 
-- Config in `pyproject.toml` (pytest, ruff, mypy).
+- Config in `pyproject` (pytest, ruff, mypy).
 - Tests require a running PostgreSQL (use `docker compose up db` or set `DATABASE_URL`).
 - `conftest.py` truncates tables (`TRUNCATE ... CASCADE`) before each test.
 - Test client uses `httpx.AsyncClient` with DI override of `get_session`.
@@ -106,4 +106,3 @@ docker compose exec api python seed_db.py
 python seed_db.py
 ```
 
-The seed script creates 101 patterns across 5 collections. Running it multiple times will duplicate data — run exactly once after the first deploy.
